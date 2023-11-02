@@ -14,6 +14,7 @@
     "@0xsequence/indexer": "^1.1.3",
     "@0xsequence/network": "^1.1.3",
     "@0xsequence/waas": "^0.0.0-20230922164806",
+    "@aws-sdk/client-cognito-identity-provider": "^3.441.0",
     "@react-oauth/google": "^0.11.1",
     "@vanilla-extract/css": "^1.12.0",
     "axios": "^1.6.0",
