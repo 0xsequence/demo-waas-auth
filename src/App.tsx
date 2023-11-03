@@ -14,6 +14,7 @@ import { SendTransactionsView } from './components/views/SendTransactionsView'
 import { ListSessionsView } from './components/views/ListSessionsView'
 import { googleLogout } from '@react-oauth/google'
 import { SignMessageView } from './components/views/SignMessageView'
+import { CallContractsView } from './components/views/CallContractsView'
 
 export interface Chain {
   id: number
@@ -107,20 +108,14 @@ function App() {
           )}
         </Box>
         <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
-
-        <Box>
-          <Box marginBottom="5">
-            <Text variant="normal" color="text100" fontWeight="bold">
-              Sign a message
-            </Text>
-          </Box>
-        </Box>
         <Divider background="buttonGlass" />
         <ListSessionsView />
         <Divider background="buttonGlass" />
         <SendTransactionsView />
         <Divider background="buttonGlass" />
         <SignMessageView />
+        <Divider background="buttonGlass" />
+        <CallContractsView />
       </Box>
     </>
   )
