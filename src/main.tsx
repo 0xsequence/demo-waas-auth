@@ -16,7 +16,9 @@ export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence
 
 export const sequence = new Sequence({
   network: 'polygon',
-  tenant: 45,
+  secret: 'this-is-a-secret',
+  tenant: 46,
+
   identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
 
   // Config
