@@ -8,7 +8,6 @@ export function SignMessageView() {
 
   const signMessage = async () => {
     const signature = await sequence.signMessage({
-      chainId: 137,
       message: messageToSign,
     })
 

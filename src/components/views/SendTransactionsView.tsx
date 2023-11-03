@@ -21,7 +21,6 @@ export function SendTransactionsView() {
     try {
       setIsNativeTokenSendTxInProgress(true)
       const tx = await sequence.sendTransaction({
-        chainId: await node.getNetwork().then(n => n.chainId),
         transactions: [{
           to, value: ethers.utils.parseEther(amount)
         }]

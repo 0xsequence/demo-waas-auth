@@ -6,22 +6,24 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import Login from './Login.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { SequenceAuth } from '@0xsequence/waas'
+import { Sequence } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
 
 export const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
-export const sequence = new SequenceAuth({
-  key: '',
-  tenant: 40,
+
+export const sequence = new Sequence({
+  network: 'polygon',
+  tenant: 45,
+  identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
+
   // Config
   rpcServer: 'http://localhost:9123',
   kmsRegion: 'us-east-1',
   idpRegion: 'us-east-2',
   keyId: 'arn:aws:kms:us-east-1:000000000000:key/aeb99e0f-9e89-44de-a084-e1817af47778',
-  identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
   endpoint: 'http://localstack:4566',
 })
 
