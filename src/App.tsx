@@ -5,6 +5,7 @@ import {
   Divider,
   Button,
   Spinner,
+  Modal,
 } from '@0xsequence/design-system'
 
 import { router, sequence } from './main'
@@ -15,6 +16,7 @@ import { ListSessionsView } from './components/views/ListSessionsView'
 import { googleLogout } from '@react-oauth/google'
 import { SignMessageView } from './components/views/SignMessageView'
 import { CallContractsView } from './components/views/CallContractsView'
+import { AnimatePresence } from 'framer-motion'
 
 export interface Chain {
   id: number
@@ -25,6 +27,7 @@ export interface Chain {
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
   const [fetchWalletAddressError, setFetchWalletAddressError] = useState<string>()
+  const [checkYourEmailMessage, setCheckYourEmailMessage] = useState<string>()
 
   useEffect(() => {
     sequence.getAddress().then((address: string) => {
@@ -42,9 +45,16 @@ function App() {
     })
   }, [])
 
+  sequence.onValidationRequired(() => {
+    setCheckYourEmailMessage('Check your email to validate your session')
+    sequence.waitForSessionValid(600 * 1000, 4000).then(() => {
+      setCheckYourEmailMessage(undefined)
+    })
+  })
+
   return (
     <>
-      {/* <AnimatePresence>
+      <AnimatePresence>
       {checkYourEmailMessage && 
           <Modal>
             <div style={{
@@ -59,7 +69,7 @@ function App() {
             </div>
           </Modal>
         }
-      </AnimatePresence> */}
+      </AnimatePresence>
       <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
         <Box marginBottom="10">
           <Logo />

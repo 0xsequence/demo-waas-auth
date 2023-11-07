@@ -16,7 +16,7 @@ dependencies:
     version: 1.1.3(ethers@5.7.2)
   '@0xsequence/waas':
     specifier: ^0.0.0-20230922164806
-    version: 0.0.0-20230922164806
+    version: link:node_modules/@0xsequence/waas
   '@aws-sdk/client-cognito-identity-provider':
     specifier: ^3.441.0
     version: 3.441.0
@@ -157,15 +157,6 @@ packages:
     dependencies:
       ethers: 5.7.2
       js-base64: 3.7.5
-    dev: false
-
-  /@0xsequence/waas@0.0.0-20230922164806:
-    resolution: {integrity: sha512-ThGXKyZ9aTNxHA6M2qM8sN9lvvoKW6YZgHwc7q/0c3Pt9kRh/Hc09uJBNrlLOfnwfng3tq0uZIXI2H+BFt78KQ==}
-    dependencies:
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: false
 
   /@aashutoshrathi/word-wrap@1.2.6:

@@ -17,7 +17,7 @@ export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence
 export const sequence = new Sequence({
   network: 'polygon',
   secret: 'this-is-a-secret',
-  tenant: 46,
+  tenant: 48,
 
   identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
 
@@ -26,7 +26,7 @@ export const sequence = new Sequence({
   kmsRegion: 'us-east-1',
   idpRegion: 'us-east-2',
   keyId: 'arn:aws:kms:us-east-1:000000000000:key/aeb99e0f-9e89-44de-a084-e1817af47778',
-  endpoint: 'http://localstack:4566',
+  endpoint: 'http://localhost:4566',
 })
 
 export const router = createBrowserRouter([
