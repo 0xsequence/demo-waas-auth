@@ -2,6 +2,7 @@
 import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
 import { SetStateAction, useState } from "react"
 import { sequence } from "../../main"
+import { isSentTransactionResponse } from "@0xsequence/waas"
 
 export function CallContractsView() {
   const [contractAddress, setContractAddress] = useState<string>('')
@@ -10,10 +11,13 @@ export function CallContractsView() {
   const [contractMethodArgs, setContractMethodArgs] = useState<string>('')
   const [transactionHash, setTransactionHash] = useState<string>()
   const [inProgress, setInProgress] = useState<boolean>(false)
+  const [sendTransactionError, setSendTransactionError] = useState<string>()
 
   const callContract = async () => {
     try {
+      setSendTransactionError(undefined)
       setInProgress(true)
+
       const tx = await sequence.callContract({
         to: contractAddress,
         abi: contractAbi,
@@ -22,7 +26,12 @@ export function CallContractsView() {
         value: 0
       })
 
-      setTransactionHash(tx.data.txHash)
+      if (isSentTransactionResponse(tx)) {
+        setTransactionHash(tx.data.txHash)
+      } else {
+        setSendTransactionError(tx.data.error)
+      }
+
       setInProgress(false)
     } catch (e) {
       console.error(e)
@@ -89,6 +98,11 @@ export function CallContractsView() {
           data-id="nativeTokenSendAmount"
         />
       </Box>
+      {sendTransactionError && (
+        <Box marginTop="3">
+          Transaction failed: {sendTransactionError}
+        </Box>
+      )}
       {!inProgress ? (
         <Button
           marginTop="5"

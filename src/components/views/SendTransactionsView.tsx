@@ -2,6 +2,7 @@ import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system
 import { ethers } from "ethers"
 import { SetStateAction, useEffect, useState } from "react"
 import { node, sequence } from "../../main"
+import { isSentTransactionResponse } from "@0xsequence/waas"
 
 export function SendTransactionsView() {
   const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
@@ -9,6 +10,7 @@ export function SendTransactionsView() {
   const [nativeTokenSendAmount, setNativeTokenSendAmount] = useState<string>('')
   const [nativeTokenSendTxHash, setNativeTokenSendTxHash] = useState<string>()
   const [isNativeTokenSendTxInProgress, setIsNativeTokenSendTxInProgress] = useState<boolean>(false)
+  const [sendTransactionError, setSendTransactionError] = useState<string>()
 
   useEffect(() => { fetchNativeTokenBalance() }, [])
 
@@ -19,13 +21,21 @@ export function SendTransactionsView() {
 
   const sendNativeToken = async (to: string, amount: string) => {
     try {
+      setSendTransactionError(undefined)
+
       setIsNativeTokenSendTxInProgress(true)
       const tx = await sequence.sendTransaction({
         transactions: [{
           to, value: ethers.utils.parseEther(amount)
         }]
       })
-      setNativeTokenSendTxHash(tx.data.txHash)
+
+      if (isSentTransactionResponse(tx)) {
+        setNativeTokenSendTxHash(tx.data.txHash)
+      } else {
+        setSendTransactionError(tx.data.error)
+      }
+
       setIsNativeTokenSendTxInProgress(false)
     } catch (e) {
       console.error(e)
@@ -70,6 +80,11 @@ export function SendTransactionsView() {
           data-id="nativeTokenSendAmount"
         />
       </Box>
+      {sendTransactionError && (
+        <Box marginTop="3">
+          Transaction failed: {sendTransactionError}
+        </Box>
+      )}
       {!isNativeTokenSendTxInProgress ? (
         <Button
           marginTop="5"
