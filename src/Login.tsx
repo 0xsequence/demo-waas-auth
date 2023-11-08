@@ -23,8 +23,6 @@ function Login() {
       initiateAuth: initiateEmailAuth,
       sendChallengeAnswer,
   } = useEmailAuth({
-      region: 'us-east-2',
-      clientId: '5fl7dg7mvu534o9vfjbc6hj31p',
       onSuccess: async (idToken) => {
           setSigningIn(true)
           const walletAddress = await sequence.signIn({ idToken }, randomName())
