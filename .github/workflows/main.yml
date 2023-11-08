@@ -1,0 +1,48 @@
+name: GH Pages Deploy
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "*.md"
+
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - "*.md"
+
+jobs:
+  build-deploy:
+    name: Build and deploy app
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@master
+        with:
+          persist-credentials: false
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies 🔧
+        run: yarn install
+
+      - name: Build 🏗️
+        run: yarn build
+
+      - name: Deploy to GH Pages 🚀
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
