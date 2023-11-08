@@ -72,7 +72,7 @@ export const PINCodeInput = (props: PINCodeInputProps) => {
     }
   }
 
-  const handlePaste = (idx: number, ev: React.ClipboardEvent<HTMLInputElement>) => {
+  const handlePaste = (_: number, ev: React.ClipboardEvent<HTMLInputElement>) => {
     const pasted = ev.clipboardData.getData('text/plain')
     const filtered = pasted.replace(/\D/g, '')
 
@@ -114,4 +114,4 @@ export const PINCodeInput = (props: PINCodeInputProps) => {
   )
 }
 
-const range = (start: number, end: number) => Array.from({ length: end - start }, (v, k) => k + start)
+const range = (start: number, end: number) => Array.from({ length: end - start }, (_, k) => k + start)

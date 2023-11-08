@@ -5,7 +5,7 @@ import { Sessions } from "@0xsequence/waas"
 
 export function ListSessionsView() {
   const [sessions, setSessions] = useState<Sessions>()
-  const [thisSession, setThisSession] = useState<string>()
+  const [_, setThisSession] = useState<string>()
   const [loading, setLoading] = useState<boolean>(true)
 
   const [getSessionsError, setGetSessionsError] = useState<string>()
