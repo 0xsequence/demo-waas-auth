@@ -9,6 +9,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Sequence } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
+import { defaults } from '@0xsequence/waas'
 
 export const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
@@ -17,17 +18,10 @@ export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence
 export const sequence = new Sequence({
   network: 'polygon',
   secret: 'this-is-a-secret',
-  tenant: 52,
+  tenant: 9,
 
   identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
-
-  // Config
-  rpcServer: 'http://localhost:9123',
-  kmsRegion: 'us-east-1',
-  idpRegion: 'us-east-2',
-  keyId: 'arn:aws:kms:us-east-1:000000000000:key/aeb99e0f-9e89-44de-a084-e1817af47778',
-  endpoint: 'http://localhost:4566',
-})
+}, defaults.TEMPLATE_NEXT)
 
 export const router = createBrowserRouter([
   {
