@@ -17,10 +17,7 @@ export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence
 
 export const sequence = new Sequence({
   network: 'polygon',
-  secret: 'this-is-a-secret',
-  tenant: 9,
-
-  identityPoolId: 'us-east-2:42c9f39d-c935-4d5c-a845-5c8815c79ee3',
+  key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyJ9',
 }, defaults.TEMPLATE_NEXT)
 
 export const router = createBrowserRouter([
