@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Box,
-  Text,
-  Divider,
-  Button,
-  Spinner,
-  Modal,
-} from '@0xsequence/design-system'
+import { Box, Text, Divider, Button, Spinner, Modal } from '@0xsequence/design-system'
 
 import { router, sequence } from './main'
 
@@ -17,6 +10,7 @@ import { googleLogout } from '@react-oauth/google'
 import { SignMessageView } from './components/views/SignMessageView'
 import { CallContractsView } from './components/views/CallContractsView'
 import { AnimatePresence } from 'framer-motion'
+import { PINCodeInput } from './components/PINCodeInput'
 
 export interface Chain {
   id: number
@@ -27,14 +21,20 @@ export interface Chain {
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
   const [fetchWalletAddressError, setFetchWalletAddressError] = useState<string>()
-  const [checkYourEmailMessage, setCheckYourEmailMessage] = useState<string>()
+
+  const [sessionValidationSalt, setSessionValidationSalt] = useState<string | undefined>()
+  const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
+  const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
   useEffect(() => {
-    sequence.getAddress().then((address: string) => {
-      setWalletAddress(address)
-    }).catch((e: Error) => {
-      setFetchWalletAddressError(e.message)
-    })
+    sequence
+      .getAddress()
+      .then((address: string) => {
+        setWalletAddress(address)
+      })
+      .catch((e: Error) => {
+        setFetchWalletAddressError(e.message)
+      })
   }, [])
 
   useEffect(() => {
@@ -45,30 +45,49 @@ function App() {
     })
   }, [])
 
-  sequence.onValidationRequired(() => {
-    setCheckYourEmailMessage('Check your email to validate your session')
-    sequence.waitForSessionValid(600 * 1000, 4000).then(() => {
-      setCheckYourEmailMessage(undefined)
+  useEffect(() => {
+    const code = sessionValidationCode.join('')
+    if (code.length === 6 && sessionValidationSalt) {
+      sequence.finishValidateSession(sessionValidationSalt, code)
+      setIsFinishValidateSessionPending(true)
+    }
+  }, [sessionValidationCode])
+
+  sequence.onValidationRequired(salt => {
+    setSessionValidationSalt(salt)
+    sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
+      console.log('isValid', isValid)
+      if (isValid) {
+        setSessionValidationSalt(undefined)
+      }
+      setSessionValidationCode([])
+      setIsFinishValidateSessionPending(false)
     })
   })
 
   return (
     <>
       <AnimatePresence>
-      {checkYourEmailMessage && 
+        {sessionValidationSalt && (
           <Modal>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontSize: '1.2em',
-              height: '50vh'
-            }}>
-              {checkYourEmailMessage}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontSize: '1.2em',
+                height: '50vh'
+              }}
+            >
+              <Box flexDirection="column" alignItems="center">
+                <Text marginBottom="7">Please enter the session verification code that was sent to your email</Text>
+                <PINCodeInput value={sessionValidationCode} digits={6} onChange={setSessionValidationCode} />
+                <Box marginTop="5">{isFinishValidateSessionPending && <Spinner />}</Box>
+              </Box>
             </div>
           </Modal>
-        }
+        )}
       </AnimatePresence>
       <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
         <Box marginBottom="10">
