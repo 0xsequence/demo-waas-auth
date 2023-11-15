@@ -11,13 +11,15 @@ import App from './App.tsx'
 import { ethers } from 'ethers'
 import { defaults } from '@0xsequence/waas'
 
-export const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+const SEQUENCE_API_KEY = import.meta.env.VITE_SEQUENCE_API_KEY
 
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 export const sequence = new Sequence({
   network: 'polygon',
-  key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
+  key: SEQUENCE_API_KEY,
+  idpRegion: 'us-west-2'
 }, defaults.TEMPLATE_NEXT)
 
 export const router = createHashRouter([
@@ -34,7 +36,7 @@ export const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <RouterProvider router={router} />
       </GoogleOAuthProvider>
     </ThemeProvider>
