@@ -19,7 +19,6 @@ export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence
 export const sequence = new Sequence({
   network: 'polygon',
   key: SEQUENCE_API_KEY,
-  idpRegion: 'us-west-2'
 }, defaults.TEMPLATE_NEXT)
 
 export const router = createHashRouter([
