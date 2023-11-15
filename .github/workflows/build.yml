@@ -23,6 +23,7 @@ jobs:
       - name: Build
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_SEQUENCE_API_KEY: ${{ secrets.VITE_SEQUENCE_API_KEY }}
         run: pnpm build
 
       - name: Push
