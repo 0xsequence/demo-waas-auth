@@ -1,27 +1,36 @@
-# React + TypeScript + Vite
+# Sequence WaaS Integration Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates the integration of Sequence Wallet as a Service (WaaS) using the `@0xsequence/waas` typescript SDK.
 
-Currently, two official plugins are available:
+Sequence WaaS simplifies wallet functionalities for users and devs, eliminating the need for extensions or popups, whili efficiently managing user authentication, transaction processing, and message signing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+### Installation
+Install the project dependencies with:
+```
+pnpm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Launching the Demo
+Start the development server using:
+```
+pnpm dev
+```
+
+## Configuration
+### Environment Setup
+Customize the application by setting `GOOGLE_CLIENT_ID` and `SEQUENCE_API_KEY` in the `.env` file. The project includes sample API keys for initial local testing.
+
+### Fallback to Sample Configuration
+If configurations in the `.env` file are missing, the project automatically uses the sample configuration.
+
+## Documentation
+Access detailed information about Sequence WaaS in the [Sequence WaaS Documentation](https://docs.sequence.xyz/waas/waas-auth/getting-started). Note that this documentation is subject to change and currently available only through this link.
+
+## Current Limitations
+- The demo currently supports only social logins for transaction activities. The email login is present but does not support transaction functionalities at this stage.
+
+---
+
+This demo is intended for development and demonstration purposes. Replace the API keys with your own for any production use.
