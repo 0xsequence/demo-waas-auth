@@ -1,10 +1,10 @@
-import { SequenceIndexerClient, TokenBalance, ContractType } from '@0xsequence/indexer'
+import { SequenceIndexer, TokenBalance, ContractType } from '@0xsequence/indexer'
 import { ChainId, networks, indexerURL } from '@0xsequence/network'
 import { ethers } from 'ethers'
 
 const getIndexerClient = (chainId: number) => {
   const network = networks[chainId as ChainId]
-  return new SequenceIndexerClient(indexerURL(network.name))
+  return new SequenceIndexer(indexerURL(network.name))
 }
 
 interface GetTokenBalancesArgs {
@@ -39,7 +39,10 @@ export const getTokenBalances = async ({ accountAddress, chainId }: GetTokenBala
   try {
     const indexerClient = getIndexerClient(chainId)
 
-    const res = await indexerClient.getTokenBalances({ accountAddress, includeMetadata: true })
+    const res = await indexerClient.getTokenBalances({
+      accountAddress,
+      includeMetadata: true
+    })
 
     return res?.balances || []
   } catch (e) {
@@ -79,7 +82,7 @@ const DEVICE_EMOJIS = [
 export function randomName() {
   const wordlistSize = 2048
   const words = ethers.wordlists.en
-  
+
   const randomEmoji = DEVICE_EMOJIS[Math.floor(Math.random() * DEVICE_EMOJIS.length)]
   const randomWord1 = words.getWord(Math.floor(Math.random() * wordlistSize))
   const randomWord2 = words.getWord(Math.floor(Math.random() * wordlistSize))
