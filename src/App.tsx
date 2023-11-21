@@ -22,7 +22,6 @@ function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
   const [fetchWalletAddressError, setFetchWalletAddressError] = useState<string>()
 
-  const [sessionValidationSalt, setSessionValidationSalt] = useState<string | undefined>()
   const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
@@ -47,19 +46,16 @@ function App() {
 
   useEffect(() => {
     const code = sessionValidationCode.join('')
-    if (code.length === 6 && sessionValidationSalt) {
-      sequence.finishValidateSession(sessionValidationSalt, code)
-      setIsFinishValidateSessionPending(true)
+    if (code.length === 6) {
+      sequence.finishValidateSession(code)
     }
   }, [sessionValidationCode])
 
-  sequence.onValidationRequired(salt => {
-    setSessionValidationSalt(salt)
+  sequence.onValidationRequired(() => {
+    setIsFinishValidateSessionPending(true)
+
     sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
       console.log('isValid', isValid)
-      if (isValid) {
-        setSessionValidationSalt(undefined)
-      }
       setSessionValidationCode([])
       setIsFinishValidateSessionPending(false)
     })
@@ -68,7 +64,7 @@ function App() {
   return (
     <>
       <AnimatePresence>
-        {sessionValidationSalt && (
+        {isFinishValidateSessionPending && (
           <Modal>
             <div
               style={{
