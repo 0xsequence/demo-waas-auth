@@ -22,8 +22,8 @@ function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
   const [fetchWalletAddressError, setFetchWalletAddressError] = useState<string>()
 
-  const [sessionValidationSalt, setSessionValidationSalt] = useState<string | undefined>()
   const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
+  const [isValidateSessionPending, setIsValidateSessionPending] = useState(false)
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
   useEffect(() => {
@@ -47,28 +47,33 @@ function App() {
 
   useEffect(() => {
     const code = sessionValidationCode.join('')
-    if (code.length === 6 && sessionValidationSalt) {
-      sequence.finishValidateSession(sessionValidationSalt, code)
+    if (code.length === 6) {
       setIsFinishValidateSessionPending(true)
+      sequence.finishValidateSession(code)
     }
   }, [sessionValidationCode])
 
-  sequence.onValidationRequired(salt => {
-    setSessionValidationSalt(salt)
-    sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
-      console.log('isValid', isValid)
-      if (isValid) {
-        setSessionValidationSalt(undefined)
-      }
-      setSessionValidationCode([])
-      setIsFinishValidateSessionPending(false)
+  useEffect(() => {
+    const removeCallback = sequence.onValidationRequired(() => {
+      setIsValidateSessionPending(true)
+
+      sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
+        console.log('isValid', isValid)
+        setSessionValidationCode([])
+        setIsValidateSessionPending(false)
+        setIsFinishValidateSessionPending(false)
+      })
     })
-  })
+    return () => {
+      removeCallback.then((cb: any) => cb())
+    }
+  }, []);
+
 
   return (
     <>
       <AnimatePresence>
-        {sessionValidationSalt && (
+        {isValidateSessionPending && (
           <Modal>
             <div
               style={{

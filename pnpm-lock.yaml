@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.1.3
     version: 1.4.0(ethers@5.7.2)
   '@0xsequence/waas':
-    specifier: 0.0.0-20231113164400
-    version: 0.0.0-20231113164400
+    specifier: 0.0.0-20231121142317
+    version: 0.0.0-20231121142317
   '@react-oauth/google':
     specifier: ^0.11.1
     version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
@@ -156,8 +156,8 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/waas@0.0.0-20231113164400:
-    resolution: {integrity: sha512-0HrQe/vU8uWs9D6RBSEX+K0iJedSLoGeeOgNh+jsJvykbll3YxfXYawitiXMzdiqyB86tEYmBU5jinZaLUddnw==}
+  /@0xsequence/waas@0.0.0-20231121142317:
+    resolution: {integrity: sha512-oOS62pkPFN5JVHQZDzMG3HgHtbkyxyKE5DV1S9/0XZOlLuCNaGp7M9CIAd0r+q7tUKXh3iihna0Nm4P/CBhJ3A==}
     dependencies:
       '@aws-sdk/client-cognito-identity-provider': 3.449.0
       '@aws-sdk/client-kms': 3.449.0
