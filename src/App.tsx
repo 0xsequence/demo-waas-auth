@@ -53,16 +53,22 @@ function App() {
     }
   }, [sessionValidationCode])
 
-  sequence.onValidationRequired(() => {
-    setIsValidateSessionPending(true)
+  useEffect(() => {
+    const removeCallback = sequence.onValidationRequired(() => {
+      setIsValidateSessionPending(true)
 
-    sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
-      console.log('isValid', isValid)
-      setSessionValidationCode([])
-      setIsValidateSessionPending(false)
-      setIsFinishValidateSessionPending(false)
+      sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
+        console.log('isValid', isValid)
+        setSessionValidationCode([])
+        setIsValidateSessionPending(false)
+        setIsFinishValidateSessionPending(false)
+      })
     })
-  })
+    return () => {
+      removeCallback.then((cb: any) => cb())
+    }
+  }, []);
+
 
   return (
     <>
