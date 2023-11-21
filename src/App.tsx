@@ -23,6 +23,7 @@ function App() {
   const [fetchWalletAddressError, setFetchWalletAddressError] = useState<string>()
 
   const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
+  const [isValidateSessionPending, setIsValidateSessionPending] = useState(false)
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
   useEffect(() => {
@@ -47,16 +48,18 @@ function App() {
   useEffect(() => {
     const code = sessionValidationCode.join('')
     if (code.length === 6) {
+      setIsFinishValidateSessionPending(true)
       sequence.finishValidateSession(code)
     }
   }, [sessionValidationCode])
 
   sequence.onValidationRequired(() => {
-    setIsFinishValidateSessionPending(true)
+    setIsValidateSessionPending(true)
 
     sequence.waitForSessionValid(600 * 1000, 4000).then((isValid: boolean) => {
       console.log('isValid', isValid)
       setSessionValidationCode([])
+      setIsValidateSessionPending(false)
       setIsFinishValidateSessionPending(false)
     })
   })
@@ -64,7 +67,7 @@ function App() {
   return (
     <>
       <AnimatePresence>
-        {isFinishValidateSessionPending && (
+        {isValidateSessionPending && (
           <Modal>
             <div
               style={{
