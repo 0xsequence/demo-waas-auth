@@ -11,6 +11,8 @@ import { SignMessageView } from './components/views/SignMessageView'
 import { CallContractsView } from './components/views/CallContractsView'
 import { AnimatePresence } from 'framer-motion'
 import { PINCodeInput } from './components/PINCodeInput'
+import { SendERC20View } from './components/views/SendERC20View'
+import { SendERC1155View } from './components/views/SendERC1155View'
 
 export interface Chain {
   id: number
@@ -146,6 +148,10 @@ function App() {
         <ListSessionsView />
         <Divider background="buttonGlass" />
         <SendTransactionsView />
+        <Divider background="buttonGlass" />
+        <SendERC20View />
+        <Divider background="buttonGlass" />
+        <SendERC1155View />
         <Divider background="buttonGlass" />
         <SignMessageView />
         <Divider background="buttonGlass" />
