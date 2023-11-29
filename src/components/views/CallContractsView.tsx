@@ -41,11 +41,6 @@ export function CallContractsView() {
   
   return (
     <Box>
-      <Box marginBottom="5">
-        <Text variant="normal" color="text100" fontWeight="bold">
-          Call any contract
-        </Text>
-      </Box>
       <Box marginTop="5">
         <TextInput
           name="callContractAddress"

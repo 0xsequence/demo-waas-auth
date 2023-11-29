@@ -45,11 +45,6 @@ export function SendTransactionsView() {
   
   return (
     <Box>
-      <Box marginBottom="5">
-        <Text variant="normal" color="text100" fontWeight="bold">
-          Send native token transaction
-        </Text>
-      </Box>
       <Text variant="normal" fontWeight="bold">
         Native token balance: {ethers.utils.formatEther(nativeTokenBalance || 0)} MATIC
       </Text>

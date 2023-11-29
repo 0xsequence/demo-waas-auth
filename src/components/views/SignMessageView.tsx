@@ -16,11 +16,6 @@ export function SignMessageView() {
 
   return (
     <Box>
-      <Box marginBottom="5">
-        <Text variant="normal" color="text100" fontWeight="bold">
-          Sign message
-        </Text>
-      </Box>
       <TextInput
         name="signMessageText"
         type="text"

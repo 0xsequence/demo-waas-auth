@@ -152,11 +152,6 @@ export function SendERC1155View() {
   return (
     <Box>
       <Box marginBottom="5">
-        <Text variant="normal" color="text100" fontWeight="bold">
-          Send ERC1155 Tokens
-        </Text>
-      </Box>
-      <Box marginBottom="5">
         <TextInput
           type="text"
           value={tokenAddress}

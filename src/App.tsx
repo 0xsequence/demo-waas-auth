@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Text, Divider, Button, Spinner, Modal } from '@0xsequence/design-system'
+import { Box, Text, Divider, Button, Spinner, Modal, Collapsible } from '@0xsequence/design-system'
 
 import { router, sequence } from './main'
 
@@ -146,16 +146,26 @@ function App() {
         <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
         <Divider background="buttonGlass" />
         <ListSessionsView />
-        <Divider background="buttonGlass" />
-        <SendTransactionsView />
-        <Divider background="buttonGlass" />
-        <SendERC20View />
-        <Divider background="buttonGlass" />
-        <SendERC1155View />
-        <Divider background="buttonGlass" />
-        <SignMessageView />
-        <Divider background="buttonGlass" />
-        <CallContractsView />
+        <Collapsible marginY={"3"} label="Send native token transaction">
+          <Divider background="buttonGlass" />
+          <SendTransactionsView />
+        </Collapsible>
+        <Collapsible marginY={"3"} label="Send ERC20 transaction">
+          <Divider background="buttonGlass" />
+          <SendERC20View />
+        </Collapsible>
+        <Collapsible marginY={"3"} label="Send ERC1155 transaction">
+          <Divider background="buttonGlass" />
+          <SendERC1155View />
+        </Collapsible>
+        <Collapsible marginY={"3"} label="Sign a message">
+          <Divider background="buttonGlass" />
+          <SignMessageView />
+        </Collapsible>
+        <Collapsible marginY={"3"} label="Call contracts">
+          <Divider background="buttonGlass" />
+          <CallContractsView />
+        </Collapsible>
       </Box>
     </>
   )

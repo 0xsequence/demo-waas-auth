@@ -92,12 +92,6 @@ export function SendERC20View() {
 
   return (
     <Box>
-      <Box marginBottom="5">
-        <Text variant="normal" color="text100" fontWeight="bold">
-          Send ERC20 Token
-        </Text>
-      </Box>
-
       <Box marginTop="5">
         <Select
           name="token"
