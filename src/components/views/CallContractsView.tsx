@@ -1,8 +1,8 @@
 
 import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
 import { SetStateAction, useState } from "react"
-import { sequence } from "../../main"
-import { isSentTransactionResponse } from "@0xsequence/waas"
+import { signer } from '../../main'
+import { ContractTransaction, ethers } from 'ethers'
 
 export function CallContractsView() {
   const [contractAddress, setContractAddress] = useState<string>('')
@@ -18,19 +18,10 @@ export function CallContractsView() {
       setSendTransactionError(undefined)
       setInProgress(true)
 
-      const tx = await sequence.callContract({
-        to: contractAddress,
-        abi: contractAbi,
-        func: contractMethod,
-        args: JSON.parse(contractMethodArgs),
-        value: 0
-      })
-
-      if (isSentTransactionResponse(tx)) {
-        setTransactionHash(tx.data.txHash)
-      } else {
-        setSendTransactionError(tx.data.error)
-      }
+      const contract = new ethers.Contract(contractAddress, JSON.parse(contractAbi), signer)
+      const tx: ContractTransaction = await contract[contractMethod](...JSON.parse(contractMethodArgs))
+      setTransactionHash(tx.hash)
+      await tx.wait()
 
       setInProgress(false)
     } catch (e) {
@@ -38,7 +29,7 @@ export function CallContractsView() {
       setInProgress(false)
     }
   }
-  
+
   return (
     <Box>
       <Box marginBottom="5">
