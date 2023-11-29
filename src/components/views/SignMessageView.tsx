@@ -1,17 +1,14 @@
 import { Box, Text, Button, TextInput } from "@0xsequence/design-system"
 import { SetStateAction, useState } from "react"
-import { sequence } from "../../main"
+import { signer } from '../../main'
 
 export function SignMessageView() {
   const [messageToSign, setMessageToSign] = useState<string>('')
   const [signature, setSignature] = useState<string>()
 
   const signMessage = async () => {
-    const signature = await sequence.signMessage({
-      message: messageToSign,
-    })
-
-    setSignature(signature.data.signature)
+    const signature = await signer.signMessage(messageToSign)
+    setSignature(signature)
   }
 
   return (
