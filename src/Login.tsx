@@ -6,11 +6,9 @@ import { router, sequence } from './main'
 import { PINCodeInput } from './components/PINCodeInput'
 import { Logo } from './components/Logo'
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google'
+import AppleSignin from 'react-apple-signin-auth'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
-import AppleLogin from "react-apple-login";
-
-declare const AppleID: any;
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -51,16 +49,7 @@ function Login() {
     router.navigate('/')
   }
 
-    useEffect(() => {
-        AppleID.auth.init({
-            clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
-            redirectURI: 'https://' + window.location.host,
-            usePopup: true,
-        })
-    }, []);
-
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
-    console.log(response)
     const walletAddress = await sequence.signIn({
         idToken: response.authorization.id_token,
     }, randomName())
@@ -162,16 +151,22 @@ function Login() {
             Social Login
           </Text>
         </Box>
-        <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} />
-        <AppleLogin
-            clientId={import.meta.env.VITE_APPLE_CLIENT_ID}
-            usePopup={true}
-            redirectURI={'https://' + window.location.host}
-            responseType="code id_token"
-            responseMode="fragment"
-            callback={handleAppleLogin}
-            scope="openid email"
-        />
+        {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} />
+        )}
+        {import.meta.env.VITE_APPLE_CLIENT_ID && (
+          <AppleSignin
+            authOptions={{
+              clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
+              scope: 'openid email',
+              redirectURI: 'https://' + window.location.host,
+              usePopup: true,
+            }}
+            onError={(error: any) => console.error(error)}
+            onSuccess={handleAppleLogin}
+            uiType="dark"
+          />
+        )}
       </>)}
 
     </Box>
