@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@0xsequence/design-system/styles.css'
 import { ThemeProvider } from '@0xsequence/design-system'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import {createHashRouter, RouterProvider} from 'react-router-dom'
 
 import Login from './Login.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
@@ -21,7 +21,7 @@ export const sequence = new Sequence({
   key: SEQUENCE_API_KEY,
 }, defaults.TEMPLATE_NEXT)
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/login',
     element: <Login />
