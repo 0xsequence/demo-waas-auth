@@ -6,6 +6,7 @@ import { router, sequence } from './main'
 import { PINCodeInput } from './components/PINCodeInput'
 import { Logo } from './components/Logo'
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google'
+import AppleSignin from 'react-apple-signin-auth'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
 
@@ -42,6 +43,15 @@ function Login() {
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
     const walletAddress = await sequence.signIn({
       idToken: tokenResponse.credential!
+    }, randomName())
+
+    console.log(`Wallet address: ${walletAddress}`)
+    router.navigate('/')
+  }
+
+  const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
+    const walletAddress = await sequence.signIn({
+        idToken: response.authorization.id_token,
     }, randomName())
 
     console.log(`Wallet address: ${walletAddress}`)
@@ -141,7 +151,22 @@ function Login() {
             Social Login
           </Text>
         </Box>
-        <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} />
+        {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} />
+        )}
+        {import.meta.env.VITE_APPLE_CLIENT_ID && (
+          <AppleSignin
+            authOptions={{
+              clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
+              scope: 'openid email',
+              redirectURI: 'https://' + window.location.host,
+              usePopup: true,
+            }}
+            onError={(error: any) => console.error(error)}
+            onSuccess={handleAppleLogin}
+            uiType="dark"
+          />
+        )}
       </>)}
 
     </Box>

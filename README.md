@@ -18,9 +18,18 @@ Start the development server using:
 pnpm dev
 ```
 
+If you want to use Sign in with Apple you must run the server using:
+```
+pnpm dev --host --port=443
+```
+
+Then you must access it at https://localhost.direct instead of "real" localhost. This is an Apple ID security limitation.
+
 ## Configuration
 ### Environment Setup
-Customize the application by setting `GOOGLE_CLIENT_ID` and `SEQUENCE_API_KEY` in the `.env` file. The project includes sample API keys for initial local testing.
+Customize the application by setting `GOOGLE_CLIENT_ID`, `APPLE_CLIENT_ID` and `SEQUENCE_API_KEY` in the `.env` file. The project includes sample API keys for initial local testing.
+
+Setting either `GOOGLE_CLIENT_ID` or `APPLE_CLIENT_ID` will disable that social identity provider.
 
 ### Fallback to Sample Configuration
 If configurations in the `.env` file are missing, the project automatically uses the sample configuration.
@@ -30,6 +39,7 @@ Access detailed information about Sequence WaaS in the [Sequence WaaS Documentat
 
 ## Current Limitations
 - The demo currently supports only social logins for transaction activities. The email login is present but does not support transaction functionalities at this stage.
+- Sign in with Apple requires running the server in host mode at port 443. The app must then be accessed from a domain that's not localhost, e.g. https://localhost.direct.
 
 ---
 
