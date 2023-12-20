@@ -8,6 +8,9 @@ import { Logo } from './components/Logo'
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
+import AppleLogin from "react-apple-login";
+
+declare const AppleID: any;
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -42,6 +45,24 @@ function Login() {
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
     const walletAddress = await sequence.signIn({
       idToken: tokenResponse.credential!
+    }, randomName())
+
+    console.log(`Wallet address: ${walletAddress}`)
+    router.navigate('/')
+  }
+
+    useEffect(() => {
+        AppleID.auth.init({
+            clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
+            redirectURI: 'https://' + window.location.host,
+            usePopup: true,
+        })
+    }, []);
+
+  const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
+    console.log(response)
+    const walletAddress = await sequence.signIn({
+        idToken: response.authorization.id_token,
     }, randomName())
 
     console.log(`Wallet address: ${walletAddress}`)
@@ -142,6 +163,15 @@ function Login() {
           </Text>
         </Box>
         <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} />
+        <AppleLogin
+            clientId={import.meta.env.VITE_APPLE_CLIENT_ID}
+            usePopup={true}
+            redirectURI={'https://' + window.location.host}
+            responseType="code id_token"
+            responseMode="fragment"
+            callback={handleAppleLogin}
+            scope="openid email"
+        />
       </>)}
 
     </Box>
