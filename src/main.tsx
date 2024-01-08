@@ -10,16 +10,29 @@ import { Sequence } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
 import { defaults } from '@0xsequence/waas'
+import {ExtendedSequenceConfig} from "@0xsequence/waas/src/auth.ts";
+import {base64} from "ethers/lib/utils";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 const SEQUENCE_API_KEY = import.meta.env.VITE_SEQUENCE_API_KEY
 
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
+const urlParams = new URLSearchParams(window.location.search)
+let sequenceAPIKey = urlParams.get('sequenceKey') ?? SEQUENCE_API_KEY
+let extendedConfig = extendedSequenceConfigFromBase64(urlParams.get('extendedConfig') ?? "") ?? defaults.TEMPLATE_NEXT
+
+function extendedSequenceConfigFromBase64(config: string): ExtendedSequenceConfig | undefined {
+  if (config === "") {
+    return undefined
+  }
+  return JSON.parse(new TextDecoder().decode(base64.decode(config))) as unknown as ExtendedSequenceConfig
+}
+
 export const sequence = new Sequence({
   network: 'polygon',
-  key: SEQUENCE_API_KEY,
-}, defaults.TEMPLATE_NEXT)
+  key: sequenceAPIKey,
+}, extendedConfig)
 
 export const router = createHashRouter([
   {
