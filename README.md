@@ -34,6 +34,38 @@ Setting either `GOOGLE_CLIENT_ID` or `APPLE_CLIENT_ID` will disable that social 
 ### Fallback to Sample Configuration
 If configurations in the `.env` file are missing, the project automatically uses the sample configuration.
 
+### Runtime Configuration Overrides
+
+The application configuration can be overridden at run time using url params. This is useful for testing different configurations without having to change the `.env` file.
+
+#### Sequence API Key
+
+The Sequence API key can also be set in run time using url param.
+
+Example:
+```
+https://0xsequence.github.io/demo-waas-auth/?sequenceKey=eyJzZWNyZXQiOiJUQkQiLCJ0ZW5hbnQiOjk5OTAwOCwiaWRlbnRpdHlQb29sSWQiOiJ1cy1lYXN0LTI6NWY0ZTYxMTgtMGEwMS00M2E3LTliNjItMWUwMWNlODQ1NWIyIiwiZW1haWxDbGllbnRJZCI6InN1bXNzOGdjdWE0aTNmcjZkOXBkM2oxa28iLCJpZHBSZWdpb24iOiJ1cy1lYXN0LTIiLCJycGNTZXJ2ZXIiOiJodHRwczovL2QzandiN2ExcmNwa21wLmNsb3VkZnJvbnQubmV0Iiwia21zUmVnaW9uIjoidXMtZWFzdC0yIiwiZW1haWxSZWdpb24iOiJ1cy1lYXN0LTIiLCJrZXlJZCI6ImFybjphd3M6a21zOnVzLWVhc3QtMjoxNzA3Njg2Mjc1OTI6a2V5LzBmZDhmODAzLTljYjUtNGRlNS04NmU0LTQxOTYzZmI2MDQzZCJ9#/
+```
+
+#### Sequence Extended Configuration
+
+The Sequence extended configuration can also be set in run time using url param. The configuration is a base64 encoded json string.
+
+Example:
+```
+{
+  "rpcServer": "http://localhost:9123",
+  "kmsRegion": "us-east-2",
+  "idpRegion": "us-east-2",
+  "keyId": "arn:aws:kms:us-east-1:000000000000:key/aeb99e0f-9e89-44de-a084-e1817af47778",
+  "emailRegion": "us-east-2",
+  "endpoint": "http://localstack:4566"
+}
+
+https://0xsequence.github.io/demo-waas-auth/?extendedConfig=ewogICJycGNTZXJ2ZXIiOiAiaHR0cDovL2xvY2FsaG9zdDo5MTIzIiwKICAia21zUmVnaW9uIjogInVzLWVhc3QtMiIsCiAgImlkcFJlZ2lvbiI6ICJ1cy1lYXN0LTIiLAogICJrZXlJZCI6ICJhcm46YXdzOmttczp1cy1lYXN0LTE6MDAwMDAwMDAwMDAwOmtleS9hZWI5OWUwZi05ZTg5LTQ0ZGUtYTA4NC1lMTgxN2FmNDc3NzgiLAogICJlbWFpbFJlZ2lvbiI6ICJ1cy1lYXN0LTIiLAogICJlbmRwb2ludCI6ICJodHRwOi8vbG9jYWxzdGFjazo0NTY2Igp9
+```
+
+
 ## Documentation
 Access detailed information about Sequence WaaS in the [Sequence WaaS Documentation](https://docs.sequence.xyz/waas/waas-auth/getting-started). Note that this documentation is subject to change and currently available only through this link.
 
