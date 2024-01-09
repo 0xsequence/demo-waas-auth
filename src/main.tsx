@@ -9,9 +9,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Sequence } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
-import { defaults } from '@0xsequence/waas'
-import {ExtendedSequenceConfig} from "@0xsequence/waas/src/auth.ts";
-import {base64} from "ethers/lib/utils";
+import { defaults, ExtendedSequenceConfig } from '@0xsequence/waas'
+import { base64 } from "ethers/lib/utils";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 const SEQUENCE_API_KEY = import.meta.env.VITE_SEQUENCE_API_KEY
