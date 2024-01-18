@@ -6,7 +6,7 @@ import { isSentTransactionResponse } from '@0xsequence/waas'
 
 interface TokenOption {
   label: string
-  value: string 
+  value: string
 }
 
 const tokenOptions: TokenOption[] = [
