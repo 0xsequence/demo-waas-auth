@@ -13,13 +13,15 @@ import { defaults, ExtendedSequenceConfig } from '@0xsequence/waas'
 import { base64 } from "ethers/lib/utils";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
-const SEQUENCE_API_KEY = import.meta.env.VITE_SEQUENCE_API_KEY
+const SEQUENCE_PROJECT_ACCESS_KEY = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY
+const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
 
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 const urlParams = new URLSearchParams(window.location.search)
-let sequenceAPIKey = urlParams.get('sequenceKey') ?? SEQUENCE_API_KEY
-let extendedConfig = extendedSequenceConfigFromBase64(urlParams.get('extendedConfig') ?? "") ?? defaults.TEMPLATE_NEXT
+let projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
+let waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
+let preset = extendedSequenceConfigFromBase64(urlParams.get('preset') ?? "") ?? defaults.TEST
 
 function extendedSequenceConfigFromBase64(config: string): ExtendedSequenceConfig | undefined {
   if (config === "") {
@@ -30,8 +32,9 @@ function extendedSequenceConfigFromBase64(config: string): ExtendedSequenceConfi
 
 export const sequence = new Sequence({
   network: 'polygon',
-  key: sequenceAPIKey,
-}, extendedConfig)
+  projectAccessKey: projectAccessKey,
+  waasConfigKey: waasConfigKey,
+}, preset)
 
 export const router = createHashRouter([
   {
