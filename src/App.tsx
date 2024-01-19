@@ -108,7 +108,7 @@ function App() {
           </Text>
 
           <Button
-            marginLeft="1"
+            marginLeft="auto"
             label="Log out"
             size="xs"
             onClick={async () => {
@@ -126,17 +126,13 @@ function App() {
 
         <Divider background="buttonGlass" />
 
-        <Box marginLeft="auto">
-          <NetworkSwitch onNetworkChange={setNetwork}></NetworkSwitch>
-        </Box>
-
         <Box marginBottom="5">
           <Text variant="normal" color="text100" fontWeight="bold">
             Your wallet address:
           </Text>
         </Box>
 
-        <Box marginBottom="4">
+        <Box marginBottom="5">
           {walletAddress ? (
             <Box>
               <Text>{walletAddress}</Text>
@@ -145,6 +141,11 @@ function App() {
             <Spinner />
           )}
         </Box>
+
+        <Box marginBottom="5">
+          <NetworkSwitch onNetworkChange={setNetwork}></NetworkSwitch>
+        </Box>
+
         <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
         <Divider background="buttonGlass" />
         <ListSessionsView />
