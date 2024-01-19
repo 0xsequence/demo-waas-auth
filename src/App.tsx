@@ -13,6 +13,7 @@ import { AnimatePresence } from 'framer-motion'
 import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
+import { NetworkSwitch } from "./components/NetworkSwitch.tsx";
 
 export interface Chain {
   id: number
@@ -27,6 +28,8 @@ function App() {
   const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
   const [isValidateSessionPending, setIsValidateSessionPending] = useState(false)
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
+
+  const [network, setNetwork] = useState(undefined as unknown as Chain)
 
   useEffect(() => {
     sequence
@@ -71,7 +74,6 @@ function App() {
     }
   }, []);
 
-
   return (
     <>
       <AnimatePresence>
@@ -109,8 +111,14 @@ function App() {
             </Text> */}
           </Text>
 
+          <Box
+              marginLeft="auto"
+          >
+            <NetworkSwitch onNetworkChange={setNetwork}></NetworkSwitch>
+          </Box>
+
           <Button
-            marginLeft="auto"
+            marginLeft="1"
             label="Log out"
             size="xs"
             onClick={async () => {
@@ -148,23 +156,23 @@ function App() {
         <ListSessionsView />
         <Collapsible marginY={"3"} label="Send native token transaction">
           <Divider background="buttonGlass" />
-          <SendTransactionsView />
+          <SendTransactionsView network={network}/>
         </Collapsible>
         <Collapsible marginY={"3"} label="Send ERC20 transaction">
           <Divider background="buttonGlass" />
-          <SendERC20View />
+          <SendERC20View network={network} />
         </Collapsible>
         <Collapsible marginY={"3"} label="Send ERC1155 transaction">
           <Divider background="buttonGlass" />
-          <SendERC1155View />
+          <SendERC1155View network={network} />
         </Collapsible>
         <Collapsible marginY={"3"} label="Sign a message">
           <Divider background="buttonGlass" />
-          <SignMessageView />
+          <SignMessageView network={network} />
         </Collapsible>
         <Collapsible marginY={"3"} label="Call contracts">
           <Divider background="buttonGlass" />
-          <CallContractsView />
+          <CallContractsView network={network} />
         </Collapsible>
       </Box>
     </>
