@@ -2,10 +2,9 @@ import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system
 import { ethers } from "ethers"
 import { SetStateAction, useEffect, useState } from "react"
 import { node, sequence } from "../../main"
-import { isSentTransactionResponse } from "@0xsequence/waas"
-import { Chain } from "../../App.tsx";
+import { isSentTransactionResponse, Network } from "@0xsequence/waas"
 
-export function SendTransactionsView(props: {network?: Chain}) {
+export function SendTransactionsView(props: {network?: Network}) {
   const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
   const [nativeTokenSendAddress, setNativeTokenSendAddress] = useState<string>('')
   const [nativeTokenSendAmount, setNativeTokenSendAmount] = useState<string>('')

@@ -1,9 +1,9 @@
 import { Box, Text, Button, TextInput } from "@0xsequence/design-system"
+import { Network } from "@0xsequence/waas";
 import { SetStateAction, useState } from "react"
 import { sequence } from "../../main"
-import { Chain } from "../../App.tsx";
 
-export function SignMessageView(props: {network?: Chain}) {
+export function SignMessageView(props: {network?: Network}) {
   const [messageToSign, setMessageToSign] = useState<string>('')
   const [signature, setSignature] = useState<string>()
 

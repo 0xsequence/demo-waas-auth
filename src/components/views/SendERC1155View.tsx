@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { sequence } from '../../main'
-import { isSentTransactionResponse } from '@0xsequence/waas'
+import { isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
-import { Chain } from "../../App.tsx";
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
@@ -74,7 +73,7 @@ export function SendERC1155RowView(props: {
   </Box>
 }
 
-export function SendERC1155View(props: {network?: Chain}) {
+export function SendERC1155View(props: {network?: Network}) {
   const [tokenAddress, setTokenAddress] = useState<string>('')
   const [tokenEntries, setTokenEntries] = useState<TokenEntry[]>([])
   const [destinationAddress, setDestinationAddress] = useState<string>('')

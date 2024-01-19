@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { node, sequence } from '../../main'
-import { isSentTransactionResponse } from '@0xsequence/waas'
-import { Chain } from "../../App.tsx";
+import { isSentTransactionResponse, Network } from '@0xsequence/waas'
 
 interface TokenOption {
   label: string
@@ -17,7 +16,7 @@ const tokenOptions: TokenOption[] = [
   { label: 'DAI', value: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063' },
 ]
 
-export function SendERC20View(props: {network?: Chain}) {
+export function SendERC20View(props: {network?: Network}) {
   const [selectedToken, setSelectedToken] = useState<string>(tokenOptions[0].value)
   const [customTokenAddress, setCustomTokenAddress] = useState<string>('')
   const [enabledCustomToken, setEnabledCustomToken] = useState<boolean>(true)
