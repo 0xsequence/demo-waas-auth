@@ -1,63 +1,55 @@
-import {
-    Box,
-    Button,
-    DropdownMenuContent,
-    DropdownMenuPortal,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuRoot,
-    DropdownMenuTrigger,
-} from "@0xsequence/design-system";
-import { useEffect, useState } from "react";
-import { sequence } from "../main.tsx";
-import { NetworkList, Network } from "@0xsequence/waas";
+import { Box, Text, Select, TokenImage, Spinner } from '@0xsequence/design-system'
+import { useEffect, useState } from 'react'
+import { sequence } from '../main.tsx'
+import { NetworkList, Network } from '@0xsequence/waas'
+import { networkImages } from '../assets/networks/index.ts'
 
-export function NetworkSwitch(props: {onNetworkChange: (network: Network) => void}) {
-    const [network, setNetwork] = useState<undefined | Network>()
-    const [networkList, setNetworkList] = useState<NetworkList>([])
+export function NetworkSwitch({ onNetworkChange }: { onNetworkChange: (network: Network) => void }) {
+  const [network, setNetwork] = useState<undefined | Network>()
+  const [networkList, setNetworkList] = useState<NetworkList>([])
 
-    useEffect(() => {
-        sequence.networkList().then((networks: NetworkList) => {
-            setNetworkList(networks)
-        })
-    }, []);
+  useEffect(() => {
+    sequence.networkList().then((networks: NetworkList) => {
+      setNetworkList(networks)
+      setNetwork(networks[0])
+      onNetworkChange(networks[0])
+    })
+  }, [])
 
-    useEffect(() => {
-        if (network === undefined && networkList.length > 0) {
-            setNetwork(networkList[0])
-        }
-    }, [networkList, network]);
+  if (networkList.length === 0) {
+    return (
+      <Box marginY="5">
+        <Spinner />
+      </Box>
+    )
+  }
 
-    return <DropdownMenuRoot>
-        <DropdownMenuTrigger asChild>
-           <Button
-                label={network !== undefined ? network.name : 'Select network'}
-                size={'xs'}
-            />
-        </DropdownMenuTrigger>
-
-        <DropdownMenuPortal>
-            <DropdownMenuContent style={{ zIndex: 9999 }}>
-                <DropdownMenuRadioGroup>
-                    {networkList.map((o: Network) => {
-                        return (
-                            <DropdownMenuRadioItem
-                                key={o.name}
-                                value={o.name}
-                                disabled={false}
-                                onSelect={() => {
-                                    setNetwork(o)
-                                    props.onNetworkChange(o)
-                                }}
-                            >
-                                <Box alignItems="center" gap="1" width="full">
-                                    {o.name}
-                                </Box>
-                            </DropdownMenuRadioItem>
-                        )
-                    })}
-                </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-        </DropdownMenuPortal>
-    </DropdownMenuRoot>
+  return (
+    <Box marginBottom="4">
+      <Select
+        name="chainId"
+        label={'Network to use with requests:'}
+        labelLocation="top"
+        onValueChange={val => {
+          const selected = networkList?.find(chain => chain.name === val)
+          if (selected) {
+            setNetwork(selected)
+            onNetworkChange(selected)
+          }
+        }}
+        value={network?.name}
+        options={[
+          ...networkList.map(chain => ({
+            label: (
+              <Box alignItems="center" gap="2">
+                <TokenImage src={networkImages[chain.id]} size="sm" />
+                <Text>{chain.name}</Text>
+              </Box>
+            ),
+            value: String(chain.name)
+          }))
+        ]}
+      />
+    </Box>
+  )
 }
