@@ -2,10 +2,9 @@
 import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
 import { SetStateAction, useState } from "react"
 import { sequence } from "../../main"
-import { isSentTransactionResponse } from "@0xsequence/waas"
-import { Chain } from "../../App.tsx";
+import { isSentTransactionResponse, Network } from "@0xsequence/waas"
 
-export function CallContractsView(props: {network?: Chain}) {
+export function CallContractsView(props: {network?: Network}) {
   const [contractAddress, setContractAddress] = useState<string>('')
   const [contractAbi, setContractAbi] = useState<string>('')
   const [contractMethod, setContractMethod] = useState<string>('')

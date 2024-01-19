@@ -8,18 +8,17 @@ import {
     DropdownMenuRoot,
     DropdownMenuTrigger,
 } from "@0xsequence/design-system";
-import { Chain } from "../App.tsx";
 import { useEffect, useState } from "react";
 import { sequence } from "../main.tsx";
-import { ChainListReturn } from "../../../sequence.js/packages/waas/src/clients/authenticator.gen.ts";
+import { NetworkList, Network } from "@0xsequence/waas";
 
-export function NetworkSwitch(props: {onNetworkChange: (network: Chain) => void}) {
-    const [network, setNetwork] = useState(undefined as unknown as Chain)
-    const [networkList, setNetworkList] = useState<Chain[]>([])
+export function NetworkSwitch(props: {onNetworkChange: (network: Network) => void}) {
+    const [network, setNetwork] = useState<undefined | Network>()
+    const [networkList, setNetworkList] = useState<NetworkList>([])
 
     useEffect(() => {
-        sequence.chainList().then((chainsReturn: ChainListReturn) => {
-            setNetworkList(chainsReturn.chains)
+        sequence.networkList().then((networks: NetworkList) => {
+            setNetworkList(networks)
         })
     }, []);
 
@@ -30,7 +29,6 @@ export function NetworkSwitch(props: {onNetworkChange: (network: Chain) => void}
     }, [networkList, network]);
 
     return <DropdownMenuRoot>
-
         <DropdownMenuTrigger asChild>
            <Button
                 label={network !== undefined ? network.name : 'Select network'}
@@ -41,7 +39,7 @@ export function NetworkSwitch(props: {onNetworkChange: (network: Chain) => void}
         <DropdownMenuPortal>
             <DropdownMenuContent style={{ zIndex: 9999 }}>
                 <DropdownMenuRadioGroup>
-                    {networkList.map(o => {
+                    {networkList.map((o: Network) => {
                         return (
                             <DropdownMenuRadioItem
                                 key={o.name}

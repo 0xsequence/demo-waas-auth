@@ -14,12 +14,7 @@ import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
 import { NetworkSwitch } from "./components/NetworkSwitch.tsx";
-
-export interface Chain {
-  id: number
-  name: string
-  isEnabled: boolean
-}
+import { Network } from "@0xsequence/waas";
 
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
@@ -29,7 +24,7 @@ function App() {
   const [isValidateSessionPending, setIsValidateSessionPending] = useState(false)
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
-  const [network, setNetwork] = useState(undefined as unknown as Chain)
+  const [network, setNetwork] = useState<undefined | Network>()
 
   useEffect(() => {
     sequence

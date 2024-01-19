@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.1.3
     version: 1.4.0(ethers@5.7.2)
   '@0xsequence/waas':
-    specifier: 0.0.0-20240118174847
-    version: 0.0.0-20240118174847(ethers@5.7.2)
+    specifier: 0.0.0-20240119113726
+    version: 0.0.0-20240119113726(ethers@5.7.2)
   '@react-oauth/google':
     specifier: ^0.11.1
     version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
@@ -165,8 +165,8 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/waas@0.0.0-20240118174847(ethers@5.7.2):
-    resolution: {integrity: sha512-MGmyfS6LmmoZGhvK8a1m17bDaIMQvMg4bnEVPFXtqd+Jyg87F0aljTxEVzOvMDzRhKuE8sO9Exyi39MxoM7iUA==}
+  /@0xsequence/waas@0.0.0-20240119113726(ethers@5.7.2):
+    resolution: {integrity: sha512-2KsJFjBDNRxhqZgDr+i8uyKIP97Ns9XWs+lrAGvyvjBh6z1Ne9LG5AAZrkwnz0Z8oWbd4n8f6CnAB600m/Z3eg==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
