@@ -38,18 +38,27 @@ If configurations in the `.env` file are missing, the project automatically uses
 
 The application configuration can be overridden at run time using url params. This is useful for testing different configurations without having to change the `.env` file.
 
-#### Sequence API Key
+#### Project Access Key
 
-The Sequence API key can also be set in run time using url param.
+The Sequence Project Access Key can be set in run time using url param.
 
 Example:
 ```
-https://0xsequence.github.io/demo-waas-auth/?sequenceKey=eyJzZWNyZXQiOiJUQkQiLCJ0ZW5hbnQiOjk5OTAwOCwiaWRlbnRpdHlQb29sSWQiOiJ1cy1lYXN0LTI6NWY0ZTYxMTgtMGEwMS00M2E3LTliNjItMWUwMWNlODQ1NWIyIiwiZW1haWxDbGllbnRJZCI6InN1bXNzOGdjdWE0aTNmcjZkOXBkM2oxa28iLCJpZHBSZWdpb24iOiJ1cy1lYXN0LTIiLCJycGNTZXJ2ZXIiOiJodHRwczovL2QzandiN2ExcmNwa21wLmNsb3VkZnJvbnQubmV0Iiwia21zUmVnaW9uIjoidXMtZWFzdC0yIiwiZW1haWxSZWdpb24iOiJ1cy1lYXN0LTIiLCJrZXlJZCI6ImFybjphd3M6a21zOnVzLWVhc3QtMjoxNzA3Njg2Mjc1OTI6a2V5LzBmZDhmODAzLTljYjUtNGRlNS04NmU0LTQxOTYzZmI2MDQzZCJ9#/
+https://0xsequence.github.io/demo-waas-auth/?projectAccessKey=XYZ#/
 ```
 
-#### Sequence Extended Configuration
+#### WaaS Config Key
 
-The Sequence extended configuration can also be set in run time using url param. The configuration is a base64 encoded json string.
+The Sequence WaaS Config Key can also be set in run time using url param.
+
+Example:
+```
+https://0xsequence.github.io/demo-waas-auth/?waasConfig=XYZ#/
+```
+
+#### Preset
+
+The preset that determines the environment can also be set in run time using url param. The configuration is a base64 encoded json string.
 
 Example:
 ```

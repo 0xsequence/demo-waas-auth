@@ -13,12 +13,8 @@ import { AnimatePresence } from 'framer-motion'
 import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
-
-export interface Chain {
-  id: number
-  name: string
-  isEnabled: boolean
-}
+import { NetworkSwitch } from './components/NetworkSwitch.tsx'
+import { Network } from '@0xsequence/waas'
 
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
@@ -27,6 +23,9 @@ function App() {
   const [sessionValidationCode, setSessionValidationCode] = useState<string[]>([])
   const [isValidateSessionPending, setIsValidateSessionPending] = useState(false)
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
+
+  const [network, setNetwork] = useState<undefined | Network>()
+  console.log(network)
 
   useEffect(() => {
     sequence
@@ -69,8 +68,7 @@ function App() {
     return () => {
       removeCallback.then((cb: any) => cb())
     }
-  }, []);
-
+  }, [])
 
   return (
     <>
@@ -134,7 +132,7 @@ function App() {
           </Text>
         </Box>
 
-        <Box marginBottom="4">
+        <Box marginBottom="5">
           {walletAddress ? (
             <Box>
               <Text>{walletAddress}</Text>
@@ -143,28 +141,33 @@ function App() {
             <Spinner />
           )}
         </Box>
+
+        <Box marginBottom="5">
+          <NetworkSwitch onNetworkChange={setNetwork}></NetworkSwitch>
+        </Box>
+
         <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
         <Divider background="buttonGlass" />
         <ListSessionsView />
-        <Collapsible marginY={"3"} label="Send native token transaction">
+        <Collapsible marginY={'3'} label="Send native token transaction">
           <Divider background="buttonGlass" />
-          <SendTransactionsView />
+          <SendTransactionsView network={network} />
         </Collapsible>
-        <Collapsible marginY={"3"} label="Send ERC20 transaction">
+        <Collapsible marginY={'3'} label="Send ERC20 transaction">
           <Divider background="buttonGlass" />
-          <SendERC20View />
+          <SendERC20View network={network} />
         </Collapsible>
-        <Collapsible marginY={"3"} label="Send ERC1155 transaction">
+        <Collapsible marginY={'3'} label="Send ERC1155 transaction">
           <Divider background="buttonGlass" />
-          <SendERC1155View />
+          <SendERC1155View network={network} />
         </Collapsible>
-        <Collapsible marginY={"3"} label="Sign a message">
+        <Collapsible marginY={'3'} label="Sign a message">
           <Divider background="buttonGlass" />
-          <SignMessageView />
+          <SignMessageView network={network} />
         </Collapsible>
-        <Collapsible marginY={"3"} label="Call contracts">
+        <Collapsible marginY={'3'} label="Call contracts">
           <Divider background="buttonGlass" />
-          <CallContractsView />
+          <CallContractsView network={network} />
         </Collapsible>
       </Box>
     </>

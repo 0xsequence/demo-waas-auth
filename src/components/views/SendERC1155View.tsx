@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { sequence } from '../../main'
-import { isSentTransactionResponse } from '@0xsequence/waas'
+import { isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
@@ -73,7 +73,7 @@ export function SendERC1155RowView(props: {
   </Box>
 }
 
-export function SendERC1155View() {
+export function SendERC1155View(props: {network?: Network}) {
   const [tokenAddress, setTokenAddress] = useState<string>('')
   const [tokenEntries, setTokenEntries] = useState<TokenEntry[]>([])
   const [destinationAddress, setDestinationAddress] = useState<string>('')
@@ -134,7 +134,8 @@ export function SendERC1155View() {
         values: tokenEntries.map((entry) => ({
           id: entry.tokenId,
           amount: ethers.utils.parseUnits(entry.amount, 0)
-        }))
+        })),
+        network: props.network?.id
       })
 
       if (isSentTransactionResponse(tx)) {

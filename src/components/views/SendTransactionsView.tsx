@@ -2,9 +2,9 @@ import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system
 import { ethers } from "ethers"
 import { SetStateAction, useEffect, useState } from "react"
 import { node, sequence } from "../../main"
-import { isSentTransactionResponse } from "@0xsequence/waas"
+import { isSentTransactionResponse, Network } from "@0xsequence/waas"
 
-export function SendTransactionsView() {
+export function SendTransactionsView(props: {network?: Network}) {
   const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
   const [nativeTokenSendAddress, setNativeTokenSendAddress] = useState<string>('')
   const [nativeTokenSendAmount, setNativeTokenSendAmount] = useState<string>('')
@@ -26,8 +26,9 @@ export function SendTransactionsView() {
       setIsNativeTokenSendTxInProgress(true)
       const tx = await sequence.sendTransaction({
         transactions: [{
-          to, value: ethers.utils.parseEther(amount)
-        }]
+          to, value: ethers.utils.parseEther(amount),
+        }],
+        network: props.network?.id
       })
 
       if (isSentTransactionResponse(tx)) {
@@ -42,7 +43,7 @@ export function SendTransactionsView() {
       setIsNativeTokenSendTxInProgress(false)
     }
   }
-  
+
   return (
     <Box>
       <Text variant="normal" fontWeight="bold">
