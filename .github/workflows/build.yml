@@ -23,7 +23,8 @@ jobs:
       - name: Build
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-          VITE_SEQUENCE_API_KEY: ${{ secrets.VITE_SEQUENCE_API_KEY }}
+          VITE_SEQUENCE_PROJECT_ACCESS_KEY: ${{ secrets.VITE_SEQUENCE_PROJECT_ACCESS_KEY }}
+          VITE_SEQUENCE_WAAS_CONFIG_KEY: ${{ secrets.VITE_SEQUENCE_WAAS_CONFIG_KEY }}
           VITE_SEQUENCE_INDEXER_API_KEY: ${{ secrets.VITE_SEQUENCE_INDEXER_API_KEY }}
         run: pnpm build
 
