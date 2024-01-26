@@ -92,7 +92,16 @@ export function SendERC1155View(props: {network?: Network}) {
       return
     }
 
-    const client = new SequenceIndexer("https://polygon-indexer.sequence.app", INDEXER_API_KEY)
+    if (!tokenAddress) {
+      return
+    }
+
+    if (!props.network) {
+      return
+    }
+
+    const network = props.network.name
+    const client = new SequenceIndexer("https://" + network+ "-indexer.sequence.app", INDEXER_API_KEY)
 
     // pass aything you would like
     const contractAddress = tokenAddress
