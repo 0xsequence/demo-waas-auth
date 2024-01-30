@@ -26,7 +26,8 @@ export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => vo
     setLoading(true)
 
     try {
-      const { idToken } = await sequence.email.finalizeAuth({ instance, answer, email })
+      const sessionAddress = await sequence.getSessionID()
+      const { idToken } = await sequence.email.finalizeAuth({ instance, answer, email, sessionAddress })
       onSuccess(idToken)
     } catch (e: any) {
       setError(e.message || "Unknown error")
