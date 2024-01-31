@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.1.3
     version: 1.4.0(ethers@5.7.2)
   '@0xsequence/waas':
-    specifier: 0.0.0-20240119113726
-    version: 0.0.0-20240119113726(ethers@5.7.2)
+    specifier: 0.0.0-20240131180030
+    version: 0.0.0-20240131180030(ethers@5.7.2)
   '@react-oauth/google':
     specifier: ^0.11.1
     version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
@@ -88,8 +88,21 @@ devDependencies:
 
 packages:
 
+  /@0xsequence/abi@0.0.0-20240131180030:
+    resolution: {integrity: sha512-64S/iZcz3ji1vic4+ul2uI+8PNzIV5jsfQbXsxUOaVUZ8uVP4RSbbUC4wsnI8GLzQe8pObkwMqrioZddDQ0x3w==}
+    dev: false
+
   /@0xsequence/abi@1.4.0:
     resolution: {integrity: sha512-rb8CdJvA1rCQk4YeV/1ppYOW7gFEbrBskfbL+FCld1yjvE+cdO/ldLCIYVvQJLH9beRiTYNmc6JbsyoaWP8Vlw==}
+    dev: false
+
+  /@0xsequence/core@0.0.0-20240131180030(ethers@5.7.2):
+    resolution: {integrity: sha512-o1VL0KyodOo9P3kKK90F2ni75dWbov5tANE6Gw/1cGuwC1yFHOLE9K8RQvm5H/KX2QZ+t5Cs8gHUvA7Fcb268A==}
+    peerDependencies:
+      ethers: '>=5.5'
+    dependencies:
+      '@0xsequence/abi': 0.0.0-20240131180030
+      ethers: 5.7.2
     dev: false
 
   /@0xsequence/core@1.4.0(ethers@5.7.2):
@@ -129,8 +142,24 @@ packages:
       - '@types/react-dom'
     dev: false
 
+  /@0xsequence/indexer@0.0.0-20240131180030:
+    resolution: {integrity: sha512-CD5JMtP+gHrFsG7n0yWCJP1p6GIRN2fsgH8O5Cf6rFyrrXDnKDuDK/6spTLGVf7GhDY2pyC6LXLMnD7mRG2Shw==}
+    dev: false
+
   /@0xsequence/indexer@1.4.0:
     resolution: {integrity: sha512-CK/vZAlO0lOev1llSWmFztBQYzTs6eSt4LRYiFNS6NWsQouRfaPzBtEqqlMoUfWmfGNU6RfDXYNbjBpLXW9Q2g==}
+    dev: false
+
+  /@0xsequence/network@0.0.0-20240131180030(ethers@5.7.2):
+    resolution: {integrity: sha512-dIKhq4ascoCsQ4rMAEakIDaG/H25EqT/ErnwVFLOfLenQ5xvUZBbUfqbnzbxPhQkdtT9E5c8YmKkdIkKWYRFQw==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      '@0xsequence/core': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/indexer': 0.0.0-20240131180030
+      '@0xsequence/relayer': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/utils': 0.0.0-20240131180030(ethers@5.7.2)
+      ethers: 5.7.2
     dev: false
 
   /@0xsequence/network@1.4.0(ethers@5.7.2):
@@ -145,6 +174,17 @@ packages:
       ethers: 5.7.2
     dev: false
 
+  /@0xsequence/relayer@0.0.0-20240131180030(ethers@5.7.2):
+    resolution: {integrity: sha512-8ELbSoB3soUWe/y4QepBdfKMNELAtzkPCOkIuGNMwA3tUddskyRXkbPhS+eS8Rgjnf5BOblS+GDQqmkybUoJ0Q==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      '@0xsequence/abi': 0.0.0-20240131180030
+      '@0xsequence/core': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/utils': 0.0.0-20240131180030(ethers@5.7.2)
+      ethers: 5.7.2
+    dev: false
+
   /@0xsequence/relayer@1.4.0(ethers@5.7.2):
     resolution: {integrity: sha512-AnxIl4w4O+Qn3VIgHrz73xW7nsyGjjIloxp6X1lmbe37r6Rqjm3RvVz5Gp92lA1UF1ja17NloyxP1Y8h6qaXWg==}
     peerDependencies:
@@ -156,6 +196,15 @@ packages:
       ethers: 5.7.2
     dev: false
 
+  /@0xsequence/utils@0.0.0-20240131180030(ethers@5.7.2):
+    resolution: {integrity: sha512-U1HU3StlbGoE6RWOQAONuLA68pkxBjx/TqexDUB5Kn4dBO2Dvb0gbYqLOY10eR6Q1M0c5Js7DQWoOyS4OvzcHQ==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      ethers: 5.7.2
+      js-base64: 3.7.5
+    dev: false
+
   /@0xsequence/utils@1.4.0(ethers@5.7.2):
     resolution: {integrity: sha512-z071zMgubwySPyr65veg6mS8aNJK3hJDj9Fo0KKw5w7JIOafqlgGGWtJBfncGV/bsKBQlf7Ude1morOtLKLEEw==}
     peerDependencies:
@@ -165,11 +214,12 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/waas@0.0.0-20240119113726(ethers@5.7.2):
-    resolution: {integrity: sha512-2KsJFjBDNRxhqZgDr+i8uyKIP97Ns9XWs+lrAGvyvjBh6z1Ne9LG5AAZrkwnz0Z8oWbd4n8f6CnAB600m/Z3eg==}
+  /@0xsequence/waas@0.0.0-20240131180030(ethers@5.7.2):
+    resolution: {integrity: sha512-zrqVa+aozvCHY11/EuaFX0QJkhsqDpW5Z3/K1kYzqNZgVDgzeAYwMZdEa0/vQWnnIc+DAnpd0JoS7rCNC8x6CQ==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
+      '@0xsequence/network': 0.0.0-20240131180030(ethers@5.7.2)
       '@aws-sdk/client-cognito-identity-provider': 3.462.0
       '@aws-sdk/client-kms': 3.462.0
       '@aws-sdk/credential-providers': 3.462.0
