@@ -9,10 +9,10 @@ import { CredentialResponse, GoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
-import {useSessionAddress} from "./utils/useSessionAddress.ts";
+import {useSessionHash} from "./utils/useSessionHash.ts";
 
 function Login() {
-  const { sessionAddress } = useSessionAddress()
+  const { sessionHash } = useSessionHash()
   const [email, setEmail] = useState('')
   const inputRef = useRef<HTMLInputElement | null>(null)
   const isEmailValid = inputRef.current?.validity.valid
@@ -147,14 +147,14 @@ function Login() {
 
       <hr/>
 
-      {!emailAuthInProgress && !!sessionAddress && (<>
+      {!emailAuthInProgress && !!sessionHash && (<>
         <Box>
           <Text variant="large" color="text100" fontWeight="bold">
             Social Login
           </Text>
         </Box>
         {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-          <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} nonce={sessionAddress} />
+          <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} nonce={sessionHash} />
         )}
         {import.meta.env.VITE_APPLE_CLIENT_ID && (
           <AppleSignin
@@ -163,7 +163,7 @@ function Login() {
               scope: 'openid email',
               redirectURI: 'https://' + window.location.host,
               usePopup: true,
-              nonce: sessionAddress,
+              nonce: sessionHash,
             }}
             onError={(error: any) => console.error(error)}
             onSuccess={handleAppleLogin}
