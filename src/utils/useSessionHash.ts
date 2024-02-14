@@ -6,10 +6,17 @@ export function useSessionHash() {
     const [error, setError] = useState<any>(undefined)
 
     useEffect(() => {
-        sequence.getSessionHash()
-            .then(sessionHash => setSessionHash(sessionHash))
-            .catch(error => { console.error(error); setError(error) })
-    }, [])
+        const handler = async () => {
+            try {
+                setSessionHash(await sequence.getSessionHash())
+            } catch (error) {
+                console.error(error)
+                setError(error)
+            }
+        }
+        handler()
+        return sequence.onSessionStateChanged(handler)
+    }, [setSessionHash, setError])
 
     return {
         sessionHash,
