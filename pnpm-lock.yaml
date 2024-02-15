@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.1.3
     version: 1.4.0(ethers@5.7.2)
   '@0xsequence/waas':
-    specifier: 0.0.0-20240131180030
-    version: 0.0.0-20240131180030(ethers@5.7.2)
+    specifier: 0.0.0-20240215172023
+    version: 0.0.0-20240215172023(ethers@5.7.2)
   '@react-oauth/google':
     specifier: ^0.11.1
     version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
@@ -88,20 +88,20 @@ devDependencies:
 
 packages:
 
-  /@0xsequence/abi@0.0.0-20240131180030:
-    resolution: {integrity: sha512-64S/iZcz3ji1vic4+ul2uI+8PNzIV5jsfQbXsxUOaVUZ8uVP4RSbbUC4wsnI8GLzQe8pObkwMqrioZddDQ0x3w==}
+  /@0xsequence/abi@0.0.0-20240215172023:
+    resolution: {integrity: sha512-oDuh7O48BIe/rJPLoCyASj412vu2XEI5zPzfO9OyFEbBrjUJD7nHeGyNfQW14g1BkXPim0167ss8Z68GhWj3xg==}
     dev: false
 
   /@0xsequence/abi@1.4.0:
     resolution: {integrity: sha512-rb8CdJvA1rCQk4YeV/1ppYOW7gFEbrBskfbL+FCld1yjvE+cdO/ldLCIYVvQJLH9beRiTYNmc6JbsyoaWP8Vlw==}
     dev: false
 
-  /@0xsequence/core@0.0.0-20240131180030(ethers@5.7.2):
-    resolution: {integrity: sha512-o1VL0KyodOo9P3kKK90F2ni75dWbov5tANE6Gw/1cGuwC1yFHOLE9K8RQvm5H/KX2QZ+t5Cs8gHUvA7Fcb268A==}
+  /@0xsequence/core@0.0.0-20240215172023(ethers@5.7.2):
+    resolution: {integrity: sha512-D5iDRFV0HmxVidj2E3vneUS/rmzrViksvgVzxy3ZZSniMewqsmi1dz5mh4rUConL4I09odKUBrkK+rGTxZdq3A==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20240131180030
+      '@0xsequence/abi': 0.0.0-20240215172023
       ethers: 5.7.2
     dev: false
 
@@ -142,23 +142,23 @@ packages:
       - '@types/react-dom'
     dev: false
 
-  /@0xsequence/indexer@0.0.0-20240131180030:
-    resolution: {integrity: sha512-CD5JMtP+gHrFsG7n0yWCJP1p6GIRN2fsgH8O5Cf6rFyrrXDnKDuDK/6spTLGVf7GhDY2pyC6LXLMnD7mRG2Shw==}
+  /@0xsequence/indexer@0.0.0-20240215172023:
+    resolution: {integrity: sha512-OyMmmAUHy7Fxz7nMLxkh+8Pay9mbPCxzpcRAjzBncTlfa2J7mUuEwOeOKXTXhlO7ElWcULnf2Tk9WtcnEs+nVw==}
     dev: false
 
   /@0xsequence/indexer@1.4.0:
     resolution: {integrity: sha512-CK/vZAlO0lOev1llSWmFztBQYzTs6eSt4LRYiFNS6NWsQouRfaPzBtEqqlMoUfWmfGNU6RfDXYNbjBpLXW9Q2g==}
     dev: false
 
-  /@0xsequence/network@0.0.0-20240131180030(ethers@5.7.2):
-    resolution: {integrity: sha512-dIKhq4ascoCsQ4rMAEakIDaG/H25EqT/ErnwVFLOfLenQ5xvUZBbUfqbnzbxPhQkdtT9E5c8YmKkdIkKWYRFQw==}
+  /@0xsequence/network@0.0.0-20240215172023(ethers@5.7.2):
+    resolution: {integrity: sha512-oUMyPnO2mqTZZzo4/xR299o2vSCCONIsvDlgV5+96u3DoomtYsIlQIVBWSs2Z+qBXT2qzNHsA49bxS5szs5HAA==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/core': 0.0.0-20240131180030(ethers@5.7.2)
-      '@0xsequence/indexer': 0.0.0-20240131180030
-      '@0xsequence/relayer': 0.0.0-20240131180030(ethers@5.7.2)
-      '@0xsequence/utils': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/core': 0.0.0-20240215172023(ethers@5.7.2)
+      '@0xsequence/indexer': 0.0.0-20240215172023
+      '@0xsequence/relayer': 0.0.0-20240215172023(ethers@5.7.2)
+      '@0xsequence/utils': 0.0.0-20240215172023(ethers@5.7.2)
       ethers: 5.7.2
     dev: false
 
@@ -174,14 +174,14 @@ packages:
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/relayer@0.0.0-20240131180030(ethers@5.7.2):
-    resolution: {integrity: sha512-8ELbSoB3soUWe/y4QepBdfKMNELAtzkPCOkIuGNMwA3tUddskyRXkbPhS+eS8Rgjnf5BOblS+GDQqmkybUoJ0Q==}
+  /@0xsequence/relayer@0.0.0-20240215172023(ethers@5.7.2):
+    resolution: {integrity: sha512-4J8xkri4IotJD35F4Uc+hZbR2DfhKSlSrdUrFOjnv0Q9afx7zuKs5MaKVhkuJzvENVcIfzViC4FlE6shvPVOVQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20240131180030
-      '@0xsequence/core': 0.0.0-20240131180030(ethers@5.7.2)
-      '@0xsequence/utils': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/abi': 0.0.0-20240215172023
+      '@0xsequence/core': 0.0.0-20240215172023(ethers@5.7.2)
+      '@0xsequence/utils': 0.0.0-20240215172023(ethers@5.7.2)
       ethers: 5.7.2
     dev: false
 
@@ -196,8 +196,8 @@ packages:
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/utils@0.0.0-20240131180030(ethers@5.7.2):
-    resolution: {integrity: sha512-U1HU3StlbGoE6RWOQAONuLA68pkxBjx/TqexDUB5Kn4dBO2Dvb0gbYqLOY10eR6Q1M0c5Js7DQWoOyS4OvzcHQ==}
+  /@0xsequence/utils@0.0.0-20240215172023(ethers@5.7.2):
+    resolution: {integrity: sha512-JmoH5D8fc/IApVgGVjwl91vaEV2AoAuqCHDQbvpx+c8KV1dTsjuvR/gHrKOB6oFvUZJ+xJlBZFFbymCuXA9cuQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
@@ -214,16 +214,15 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/waas@0.0.0-20240131180030(ethers@5.7.2):
-    resolution: {integrity: sha512-zrqVa+aozvCHY11/EuaFX0QJkhsqDpW5Z3/K1kYzqNZgVDgzeAYwMZdEa0/vQWnnIc+DAnpd0JoS7rCNC8x6CQ==}
+  /@0xsequence/waas@0.0.0-20240215172023(ethers@5.7.2):
+    resolution: {integrity: sha512-/viAmdOLGCa2qD/YjepoCXF6LBoWv3n0WqDf2t6sJTqZkBXulQSJXsYqE03TZiOBBTjpSYkx3VW/bJchODKXDg==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
-      '@0xsequence/network': 0.0.0-20240131180030(ethers@5.7.2)
+      '@0xsequence/network': 0.0.0-20240215172023(ethers@5.7.2)
       '@aws-sdk/client-cognito-identity-provider': 3.462.0
-      '@aws-sdk/client-kms': 3.462.0
-      '@aws-sdk/credential-providers': 3.462.0
       ethers: 5.7.2
+      idb: 7.1.1
       json-canonicalize: 1.0.6
       jwt-decode: 4.0.0
     transitivePeerDependencies:
@@ -294,100 +293,6 @@ packages:
 
   /@aws-sdk/client-cognito-identity-provider@3.462.0:
     resolution: {integrity: sha512-qsaHa/SIYIgxIKHcohnwcqOOQlB6Lgg02zroL9dFtIFwcuXPsFmnAAFWyvPKcvxGDnD9xrGCc/iMlBklDN4n4w==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-crypto/sha256-browser': 3.0.0
-      '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.462.0
-      '@aws-sdk/core': 3.451.0
-      '@aws-sdk/credential-provider-node': 3.460.0
-      '@aws-sdk/middleware-host-header': 3.460.0
-      '@aws-sdk/middleware-logger': 3.460.0
-      '@aws-sdk/middleware-recursion-detection': 3.460.0
-      '@aws-sdk/middleware-signing': 3.461.0
-      '@aws-sdk/middleware-user-agent': 3.460.0
-      '@aws-sdk/region-config-resolver': 3.451.0
-      '@aws-sdk/types': 3.460.0
-      '@aws-sdk/util-endpoints': 3.460.0
-      '@aws-sdk/util-user-agent-browser': 3.460.0
-      '@aws-sdk/util-user-agent-node': 3.460.0
-      '@smithy/config-resolver': 2.0.19
-      '@smithy/fetch-http-handler': 2.2.7
-      '@smithy/hash-node': 2.0.16
-      '@smithy/invalid-dependency': 2.0.14
-      '@smithy/middleware-content-length': 2.0.16
-      '@smithy/middleware-endpoint': 2.2.1
-      '@smithy/middleware-retry': 2.0.21
-      '@smithy/middleware-serde': 2.0.14
-      '@smithy/middleware-stack': 2.0.8
-      '@smithy/node-config-provider': 2.1.6
-      '@smithy/node-http-handler': 2.1.10
-      '@smithy/protocol-http': 3.0.10
-      '@smithy/smithy-client': 2.1.16
-      '@smithy/types': 2.6.0
-      '@smithy/url-parser': 2.0.14
-      '@smithy/util-base64': 2.0.1
-      '@smithy/util-body-length-browser': 2.0.0
-      '@smithy/util-body-length-node': 2.1.0
-      '@smithy/util-defaults-mode-browser': 2.0.20
-      '@smithy/util-defaults-mode-node': 2.0.26
-      '@smithy/util-endpoints': 1.0.5
-      '@smithy/util-retry': 2.0.7
-      '@smithy/util-utf8': 2.0.2
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - aws-crt
-    dev: false
-
-  /@aws-sdk/client-cognito-identity@3.462.0:
-    resolution: {integrity: sha512-NGsFxb2ysXWUPKCRoa4KIJTcL8kddY73EV0hbw9li7+pTFzzkiYiNg6RxfHp3U+sBlhN8poItQrkAXZTDIJ1yQ==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-crypto/sha256-browser': 3.0.0
-      '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.462.0
-      '@aws-sdk/core': 3.451.0
-      '@aws-sdk/credential-provider-node': 3.460.0
-      '@aws-sdk/middleware-host-header': 3.460.0
-      '@aws-sdk/middleware-logger': 3.460.0
-      '@aws-sdk/middleware-recursion-detection': 3.460.0
-      '@aws-sdk/middleware-signing': 3.461.0
-      '@aws-sdk/middleware-user-agent': 3.460.0
-      '@aws-sdk/region-config-resolver': 3.451.0
-      '@aws-sdk/types': 3.460.0
-      '@aws-sdk/util-endpoints': 3.460.0
-      '@aws-sdk/util-user-agent-browser': 3.460.0
-      '@aws-sdk/util-user-agent-node': 3.460.0
-      '@smithy/config-resolver': 2.0.19
-      '@smithy/fetch-http-handler': 2.2.7
-      '@smithy/hash-node': 2.0.16
-      '@smithy/invalid-dependency': 2.0.14
-      '@smithy/middleware-content-length': 2.0.16
-      '@smithy/middleware-endpoint': 2.2.1
-      '@smithy/middleware-retry': 2.0.21
-      '@smithy/middleware-serde': 2.0.14
-      '@smithy/middleware-stack': 2.0.8
-      '@smithy/node-config-provider': 2.1.6
-      '@smithy/node-http-handler': 2.1.10
-      '@smithy/protocol-http': 3.0.10
-      '@smithy/smithy-client': 2.1.16
-      '@smithy/types': 2.6.0
-      '@smithy/url-parser': 2.0.14
-      '@smithy/util-base64': 2.0.1
-      '@smithy/util-body-length-browser': 2.0.0
-      '@smithy/util-body-length-node': 2.1.0
-      '@smithy/util-defaults-mode-browser': 2.0.20
-      '@smithy/util-defaults-mode-node': 2.0.26
-      '@smithy/util-endpoints': 1.0.5
-      '@smithy/util-retry': 2.0.7
-      '@smithy/util-utf8': 2.0.2
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - aws-crt
-    dev: false
-
-  /@aws-sdk/client-kms@3.462.0:
-    resolution: {integrity: sha512-657cP9zauc1GLHJ33cqyYNda8otZwpnab/ZlxxiGUYFz6E8cuR4AMZuLLaD0hHo7QcMHodZZ4oepw3Tzdwwpcw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
@@ -533,19 +438,6 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@aws-sdk/credential-provider-cognito-identity@3.462.0:
-    resolution: {integrity: sha512-oTN5PXFidfadOC+Ar1gZrRkvOTDzk4FZCf47Eqf6Spfm/Z58iQ8GuZ99uh98oQJZlcbYx8hCeuffRLQtPZS20Q==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-sdk/client-cognito-identity': 3.462.0
-      '@aws-sdk/types': 3.460.0
-      '@smithy/property-provider': 2.0.15
-      '@smithy/types': 2.6.0
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - aws-crt
-    dev: false
-
   /@aws-sdk/credential-provider-env@3.460.0:
     resolution: {integrity: sha512-WWdaRJFuYRc2Ue9NKDy2NIf8pQRNx/QRVmrsk6EkIID8uWlQIOePk3SWTVV0TZIyPrbfSEaSnJRZoShphJ6PAg==}
     engines: {node: '>=14.0.0'}
@@ -553,21 +445,6 @@ packages:
       '@aws-sdk/types': 3.460.0
       '@smithy/property-provider': 2.0.15
       '@smithy/types': 2.6.0
-      tslib: 2.6.2
-    dev: false
-
-  /@aws-sdk/credential-provider-http@3.460.0:
-    resolution: {integrity: sha512-tLnuLDsGcBRemj8jxt1MkerjwsQlYdwnlfQXvrYOO8qMrbFP2sEjAx165GeCbsjmY/y0w1UFQEV+xRpFg5dxUw==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-sdk/types': 3.460.0
-      '@smithy/fetch-http-handler': 2.2.7
-      '@smithy/node-http-handler': 2.1.10
-      '@smithy/property-provider': 2.0.15
-      '@smithy/protocol-http': 3.0.10
-      '@smithy/smithy-client': 2.1.16
-      '@smithy/types': 2.6.0
-      '@smithy/util-stream': 2.0.21
       tslib: 2.6.2
     dev: false
 
@@ -642,30 +519,6 @@ packages:
       '@smithy/property-provider': 2.0.15
       '@smithy/types': 2.6.0
       tslib: 2.6.2
-    dev: false
-
-  /@aws-sdk/credential-providers@3.462.0:
-    resolution: {integrity: sha512-M5XBK3NPbuDmZPUPlpiKeS0NxLNq/ihpEP0ZjFKwOi2fToXt3x8LqZ0e6o8NDl4UqjHtgEewu8Wwrl4paTmc1A==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-sdk/client-cognito-identity': 3.462.0
-      '@aws-sdk/client-sso': 3.460.0
-      '@aws-sdk/client-sts': 3.462.0
-      '@aws-sdk/credential-provider-cognito-identity': 3.462.0
-      '@aws-sdk/credential-provider-env': 3.460.0
-      '@aws-sdk/credential-provider-http': 3.460.0
-      '@aws-sdk/credential-provider-ini': 3.460.0
-      '@aws-sdk/credential-provider-node': 3.460.0
-      '@aws-sdk/credential-provider-process': 3.460.0
-      '@aws-sdk/credential-provider-sso': 3.460.0
-      '@aws-sdk/credential-provider-web-identity': 3.460.0
-      '@aws-sdk/types': 3.460.0
-      '@smithy/credential-provider-imds': 2.1.2
-      '@smithy/property-provider': 2.0.15
-      '@smithy/types': 2.6.0
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - aws-crt
     dev: false
 
   /@aws-sdk/middleware-host-header@3.460.0:
@@ -4340,6 +4193,10 @@ packages:
       hash.js: 1.1.7
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+    dev: false
+
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: false
 
   /ignore@5.2.4:
