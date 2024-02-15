@@ -27,7 +27,7 @@ export function ListSessionsView() {
   useEffect(() => {
     Promise.all([
       sequence.listSessions(),
-      sequence.getSessionID()
+      sequence.getSessionId()
     ]).then(([s, t]) => {
       setSessions(s)
       setThisSession(t)
