@@ -6,7 +6,7 @@ import {createHashRouter, RouterProvider} from 'react-router-dom'
 
 import Login from './Login.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { Sequence } from '@0xsequence/waas'
+import { SequenceWaaS } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
 import { defaults, ExtendedSequenceConfig } from '@0xsequence/waas'
@@ -19,9 +19,9 @@ const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 const urlParams = new URLSearchParams(window.location.search)
-let projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
-let waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
-let preset = extendedSequenceConfigFromBase64(urlParams.get('preset') ?? "") ?? defaults.TEST
+const projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
+const waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
+const preset = extendedSequenceConfigFromBase64(urlParams.get('preset') ?? "") ?? defaults.TEST
 
 function extendedSequenceConfigFromBase64(config: string): ExtendedSequenceConfig | undefined {
   if (config === "") {
@@ -30,7 +30,7 @@ function extendedSequenceConfigFromBase64(config: string): ExtendedSequenceConfi
   return JSON.parse(new TextDecoder().decode(base64.decode(config))) as unknown as ExtendedSequenceConfig
 }
 
-export const sequence = new Sequence({
+export const sequence = new SequenceWaaS({
   network: 'polygon',
   projectAccessKey: projectAccessKey,
   waasConfigKey: waasConfigKey,
