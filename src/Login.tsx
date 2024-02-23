@@ -51,7 +51,8 @@ function Login() {
     router.navigate('/')
   }
 
-  const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
+    const appleRedirectUri = 'http://' + window.location.host + (window.location.host.includes("github.io") ? '/demo-waas-auth' : '')
+    const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const walletAddress = await sequence.signIn({
         idToken: response.authorization.id_token,
     }, randomName())
@@ -161,7 +162,7 @@ function Login() {
             authOptions={{
               clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
               scope: 'openid email',
-              redirectURI: 'https://' + window.location.host,
+              redirectURI: appleRedirectUri,
               usePopup: true,
               nonce: sessionHash,
             }}
