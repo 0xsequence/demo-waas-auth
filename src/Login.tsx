@@ -51,7 +51,7 @@ function Login() {
     router.navigate('/')
   }
 
-  const appleRedirectUri = 'http://' + window.location.host + (window.location.host.includes("github.io") ? '/demo-waas-auth' : '')
+  const appleRedirectUri = 'https://' + window.location.host + (window.location.host.includes("github.io") ? '/demo-waas-auth' : '')
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const walletAddress = await sequence.signIn({
         idToken: response.authorization.id_token,
