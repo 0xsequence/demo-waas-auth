@@ -11,6 +11,7 @@ const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 export function SendTransactionsView(props: {network?: Network}) {
   const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
   const [nativeTokenName, setNativeTokenName] = useState<string>('ETH')
+  const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
   const [nativeTokenSendAddress, setNativeTokenSendAddress] = useState<string>('')
   const [nativeTokenSendAmount, setNativeTokenSendAmount] = useState<string>('')
   const [nativeTokenSendTxHash, setNativeTokenSendTxHash] = useState<string>()
@@ -30,6 +31,10 @@ export function SendTransactionsView(props: {network?: Network}) {
         const tokenName = networkConfig.name in {'polygon': 1, 'mumbai': 1} ? 'MATIC' : 'ETH'
         setNativeTokenName(tokenName)
         fetchNativeTokenBalance()
+
+        if (networkConfig.blockExplorer?.rootUrl) {
+          setBlockExplorerURL(networkConfig.blockExplorer?.rootUrl)
+        }
       }
     }
   }, [props.network])
@@ -132,7 +137,7 @@ export function SendTransactionsView(props: {network?: Network}) {
             Send native token transaction hash:
           </Text>
           <br />
-          <a href={`https://polygonscan.com/tx/${nativeTokenSendTxHash}`} target="_blank" rel="noopener noreferrer">
+          <a href={`${blockExplorerURL}tx/${nativeTokenSendTxHash}`} target="_blank" rel="noopener noreferrer">
             {nativeTokenSendTxHash}
           </a>
         </Box>
