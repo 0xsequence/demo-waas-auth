@@ -25,7 +25,6 @@ function App() {
   const [isFinishValidateSessionPending, setIsFinishValidateSessionPending] = useState(false)
 
   const [network, setNetwork] = useState<undefined | Network>()
-  console.log(network)
 
   useEffect(() => {
     sequence
