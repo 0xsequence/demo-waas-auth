@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { sequence } from '../../main'
-import { isSentTransactionResponse, Network } from '@0xsequence/waas'
+import { FeeOption, isSentTransactionResponse, Network, sendERC1155ArgsToTransaction } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
+import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
@@ -82,6 +83,11 @@ export function SendERC1155View(props: {network?: Network}) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [options, setOptions] = useState<GetTokenBalancesReturn | undefined>(undefined)
 
+  const [feeOptions, setFeeOptions] = useState<FeeOption[]>()
+  const [feeOption, setFeeOption] = useState<FeeOption>()
+  const [feeQuote, setFeeQuote] = useState<string>()
+  const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
+
   const addTokenEntry = () => {
     setTokenEntries([...tokenEntries, { tokenId: '', amount: '' }])
   }
@@ -132,6 +138,31 @@ export function SendERC1155View(props: {network?: Network}) {
     setTokenEntries(newEntries)
   }
 
+  const checkFeeOptions = async () => {
+    const resp = await checkTransactionFeeOptions({
+      transactions: [sendERC1155ArgsToTransaction({
+        to: destinationAddress,
+        token: tokenAddress,
+        values: tokenEntries.map((entry) => ({
+          id: entry.tokenId,
+          amount: ethers.utils.parseUnits(entry.amount, 0)
+        })),
+      })],
+      network: props.network,
+    })
+
+    if (resp.feeQuote && resp.feeOptions) {
+      setFeeOptions(resp.feeOptions)
+      setFeeQuote(resp.feeQuote)
+
+      console.log('feeOptions', resp)
+      return
+    }
+
+    setFeeSponsored(true)
+    console.log('tx sponsored')
+  }
+
   const sendTokens = async () => {
     try {
       setError('')
@@ -144,7 +175,9 @@ export function SendERC1155View(props: {network?: Network}) {
           id: entry.tokenId,
           amount: ethers.utils.parseUnits(entry.amount, 0)
         })),
-        network: props.network?.id
+        network: props.network?.id,
+        transactionsFeeOption: feeOption,
+        transactionsFeeQuote: feeQuote
       })
 
       if (isSentTransactionResponse(tx)) {
@@ -200,12 +233,30 @@ export function SendERC1155View(props: {network?: Network}) {
         </Box>
       )}
 
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
+      { feeSponsored && (
+        <Box marginTop="5">
+          <Text variant="normal" fontWeight="bold">
+            Fee options: Tx Sponsored!
+          </Text>
+        </Box>
+      )}
+
       {!isLoading ? (
-        <Button
-          marginTop="5"
-          label="Send Tokens"
-          onClick={sendTokens}
-        />
+        <Box>
+          <Button
+            marginTop="5"
+            marginRight="2"
+            label="Check fee options"
+            disabled={tokenAddress === '' && destinationAddress === '' && tokenEntries.length !== 0}
+            onClick={() => checkFeeOptions()}
+          />
+          <Button
+            marginTop="5"
+            label="Send Tokens"
+            onClick={sendTokens}
+          />
+        </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
           <Spinner />
