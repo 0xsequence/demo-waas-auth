@@ -1,22 +1,26 @@
-import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
+import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { SetStateAction, useEffect, useState } from "react"
 import { sequence } from "../../main"
 import { isSentTransactionResponse, Network, FeeOption } from "@0xsequence/waas"
 import { GetEtherBalanceArgs, SequenceIndexer } from '@0xsequence/indexer'
 import { findSupportedNetwork, indexerURL } from '@0xsequence/network'
+import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
 export function SendTransactionsView(props: {network?: Network}) {
   const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
   const [nativeTokenName, setNativeTokenName] = useState<string>('ETH')
+
   const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
+
   const [nativeTokenSendAddress, setNativeTokenSendAddress] = useState<string>('')
   const [nativeTokenSendAmount, setNativeTokenSendAmount] = useState<string>('')
   const [nativeTokenSendTxHash, setNativeTokenSendTxHash] = useState<string>()
   const [isNativeTokenSendTxInProgress, setIsNativeTokenSendTxInProgress] = useState<boolean>(false)
   const [sendTransactionError, setSendTransactionError] = useState<string>()
+
   const [feeOptions, setFeeOptions] = useState<FeeOption[]>()
   const [feeOption, setFeeOption] = useState<FeeOption>()
   const [feeQuote, setFeeQuote] = useState<string>()
@@ -62,20 +66,16 @@ export function SendTransactionsView(props: {network?: Network}) {
   }
 
   const checkFeeOptions = async (to: string, amount: string) => {
-    console.log('feeOptions', !feeOptions && !feeOption && !feeQuote)
-    if (!feeOptions && !feeOption && !feeQuote && !feeSponsored) {
-
-      const resp = await sequence.feeOptions({
+      const resp = await checkTransactionFeeOptions({
         transactions: [{
           to, value: ethers.utils.parseEther(amount),
         }],
-        network: props.network?.id,
+        network: props.network
       })
 
-      if (resp.data.feeQuote && resp.data.feeOptions) {
-        setFeeOptions(resp.data.feeOptions)
-        setFeeOption(resp.data.feeOptions[0])
-        setFeeQuote(resp.data.feeQuote)
+      if (resp.feeQuote && resp.feeOptions) {
+        setFeeOptions(resp.feeOptions)
+        setFeeQuote(resp.feeQuote)
 
         console.log('feeOptions', resp)
         return
@@ -83,13 +83,6 @@ export function SendTransactionsView(props: {network?: Network}) {
 
       setFeeSponsored(true)
       console.log('tx sponsored')
-      return
-    }
-
-    setFeeQuote(undefined)
-    setFeeOptions(undefined)
-    setFeeOption(undefined)
-    setFeeSponsored(false)
   }
 
   const sendNativeToken = async (to: string, amount: string) => {
@@ -116,6 +109,11 @@ export function SendTransactionsView(props: {network?: Network}) {
     } catch (e) {
       console.error(e)
       setIsNativeTokenSendTxInProgress(false)
+    } finally {
+      setFeeQuote(undefined)
+      setFeeOptions(undefined)
+      setFeeOption(undefined)
+      setFeeSponsored(false)
     }
   }
 
@@ -156,37 +154,7 @@ export function SendTransactionsView(props: {network?: Network}) {
           Transaction failed: {sendTransactionError}
         </Box>
       )}
-      {feeOptions && feeQuote ? (
-        <Box marginTop="5">
-          <Text variant="normal" fontWeight="bold">
-            Fee options:
-          </Text>
-          <Box marginTop="3"></Box>
-          <Select
-            name="chainId"
-            labelLocation="top"
-            onValueChange={tokenName => {
-              const selected = feeOptions.find(option => option.token.name === tokenName)
-              if (selected) {
-                setFeeOption(selected)
-              }
-            }}
-            value={feeOption?.token?.name}
-            options={[
-              ...feeOptions.map(option => ({
-                label: (
-                  <Box alignItems="center" gap="2">
-                    <Text>{option?.token?.name} {ethers.utils.formatUnits(option?.value, option?.token?.decimals)}</Text>
-                  </Box>
-                ),
-                value: String(option?.token?.name)
-              }))
-            ]}
-          />
-        </Box>
-      ) : (
-        <Box></Box>
-      )}
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
       { feeSponsored && (
         <Box marginTop="5">
           <Text variant="normal" fontWeight="bold">
@@ -198,6 +166,7 @@ export function SendTransactionsView(props: {network?: Network}) {
           <Box>
             <Button
               marginTop="5"
+              marginRight="2"
               label="Check fee options"
               disabled={nativeTokenSendAddress === '' && nativeTokenSendAmount === ''}
               onClick={() => checkFeeOptions(nativeTokenSendAddress, nativeTokenSendAmount)}

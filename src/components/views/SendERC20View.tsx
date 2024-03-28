@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { node, sequence } from '../../main'
-import { isSentTransactionResponse, Network } from '@0xsequence/waas'
+import { FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
+import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
 interface TokenOption {
   label: string
@@ -27,6 +28,11 @@ export function SendERC20View(props: {network?: Network}) {
   const [error, setError] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [decimals, setDecimals] = useState<number>(0)
+
+  const [feeOptions, setFeeOptions] = useState<FeeOption[]>()
+  const [feeOption, setFeeOption] = useState<FeeOption>()
+  const [feeQuote, setFeeQuote] = useState<string>()
+  const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
 
   useEffect(() => {
     fetchTokenBalance(customTokenAddress)
@@ -56,16 +62,41 @@ export function SendERC20View(props: {network?: Network}) {
     setTokenBalance(`${ethers.utils.formatUnits(balance, decimals)} ${symbol}`)
   }
 
+  const checkFeeOptions = async () => {
+    const resp = await checkTransactionFeeOptions({
+      transactions: [{
+        token: customTokenAddress,
+        to: destinationAddress,
+        value: ethers.utils.parseUnits(amount, decimals).toString(),
+        network: props.network?.id
+      }],
+      network: props.network
+    })
+
+    if (resp.feeQuote && resp.feeOptions) {
+      setFeeOptions(resp.feeOptions)
+      setFeeQuote(resp.feeQuote)
+
+      console.log('feeOptions', resp)
+      return
+    }
+
+    setFeeSponsored(true)
+    console.log('tx sponsored')
+  }
+
   const sendToken = async () => {
     try {
       setError('')
       setIsLoading(true)
 
       const tx = await sequence.sendERC20({
-        token: customTokenAddress,
+        tokenAddress: customTokenAddress,
         to: destinationAddress,
         value: ethers.utils.parseUnits(amount, decimals),
-        network: props.network?.id
+        network: props.network?.id,
+        transactionsFeeOption: feeOption,
+        transactionsFeeQuote: feeQuote
       })
 
       if (isSentTransactionResponse(tx)) {
@@ -140,12 +171,30 @@ export function SendERC20View(props: {network?: Network}) {
         </Box>
       )}
 
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
+      { feeSponsored && (
+        <Box marginTop="5">
+          <Text variant="normal" fontWeight="bold">
+            Fee options: Tx Sponsored!
+          </Text>
+        </Box>
+      )}
+
       {!isLoading ? (
-        <Button
-          marginTop="5"
-          label="Send Token"
-          onClick={sendToken}
-        />
+        <Box>
+          <Button
+            marginTop="5"
+            marginRight="2"
+            label="Check fee options"
+            disabled={customTokenAddress === '' && destinationAddress === ''}
+            onClick={() => checkFeeOptions()}
+          />
+          <Button
+            marginTop="5"
+            label="Send Token"
+            onClick={sendToken}
+          />
+        </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
           <Spinner />
