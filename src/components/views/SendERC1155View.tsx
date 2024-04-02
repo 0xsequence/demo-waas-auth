@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { sequence } from '../../main'
-import { FeeOption, isSentTransactionResponse, Network, sendERC1155ArgsToTransaction } from '@0xsequence/waas'
+import { erc1155, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
@@ -140,7 +140,7 @@ export function SendERC1155View(props: {network?: Network}) {
 
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [sendERC1155ArgsToTransaction({
+      transactions: [erc1155({
         to: destinationAddress,
         token: tokenAddress,
         values: tokenEntries.map((entry) => ({

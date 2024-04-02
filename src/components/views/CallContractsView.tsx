@@ -3,10 +3,10 @@ import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system
 import { SetStateAction, useState } from "react"
 import { sequence } from "../../main"
 import {
+  delayedEncode,
   FeeOption,
   isSentTransactionResponse,
   Network,
-  sendDelayedEncodeArgsToTransaction,
 } from "@0xsequence/waas"
 import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
@@ -26,12 +26,12 @@ export function CallContractsView(props: {network?: Network}) {
 
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [sendDelayedEncodeArgsToTransaction({
+      transactions: [delayedEncode({
         to: contractAddress,
         abi: contractAbi,
         func: contractMethod,
         args: JSON.parse(contractMethodArgs),
-        value: 0
+        value: "0"
       })],
       network: props.network
     })

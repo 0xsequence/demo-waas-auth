@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
 import { ethers } from "ethers"
 import { node, sequence } from '../../main'
-import { FeeOption, isSentTransactionResponse, Network, sendERC20ArgsToTransaction } from '@0xsequence/waas'
+import { FeeOption, isSentTransactionResponse, Network, erc20 } from '@0xsequence/waas'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
 interface TokenOption {
@@ -64,7 +64,7 @@ export function SendERC20View(props: {network?: Network}) {
 
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [sendERC20ArgsToTransaction({
+      transactions: [erc20({
         token: customTokenAddress,
         to: destinationAddress,
         value: ethers.utils.parseUnits(amount, decimals).toString(),
