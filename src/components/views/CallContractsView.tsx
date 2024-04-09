@@ -2,7 +2,13 @@
 import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
 import { SetStateAction, useState } from "react"
 import { sequence } from "../../main"
-import { isSentTransactionResponse, Network } from "@0xsequence/waas"
+import {
+  delayedEncode,
+  FeeOption,
+  isSentTransactionResponse,
+  Network,
+} from "@0xsequence/waas"
+import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
 
 export function CallContractsView(props: {network?: Network}) {
   const [contractAddress, setContractAddress] = useState<string>('')
@@ -12,6 +18,35 @@ export function CallContractsView(props: {network?: Network}) {
   const [transactionHash, setTransactionHash] = useState<string>()
   const [inProgress, setInProgress] = useState<boolean>(false)
   const [sendTransactionError, setSendTransactionError] = useState<string>()
+
+  const [feeOptions, setFeeOptions] = useState<FeeOption[]>()
+  const [feeOption, setFeeOption] = useState<FeeOption>()
+  const [feeQuote, setFeeQuote] = useState<string>()
+  const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
+
+  const checkFeeOptions = async () => {
+    const resp = await checkTransactionFeeOptions({
+      transactions: [delayedEncode({
+        to: contractAddress,
+        abi: contractAbi,
+        func: contractMethod,
+        args: JSON.parse(contractMethodArgs),
+        value: "0"
+      })],
+      network: props.network
+    })
+
+    if (resp.feeQuote && resp.feeOptions) {
+      setFeeOptions(resp.feeOptions)
+      setFeeQuote(resp.feeQuote)
+
+      console.log('feeOptions', resp)
+      return
+    }
+
+    setFeeSponsored(true)
+    console.log('tx sponsored')
+  }
 
   const callContract = async () => {
     try {
@@ -24,7 +59,9 @@ export function CallContractsView(props: {network?: Network}) {
         abi: contractAbi,
         func: contractMethod,
         args: JSON.parse(contractMethodArgs),
-        value: 0
+        value: 0,
+        transactionsFeeOption: feeOption,
+        transactionsFeeQuote: feeQuote
       })
 
       if (isSentTransactionResponse(tx)) {
@@ -94,23 +131,47 @@ export function CallContractsView(props: {network?: Network}) {
           data-id="nativeTokenSendAmount"
         />
       </Box>
+
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
+      { feeSponsored && (
+        <Box marginTop="5">
+          <Text variant="normal" fontWeight="bold">
+            Fee options: Tx Sponsored!
+          </Text>
+        </Box>
+      )}
+
       {sendTransactionError && (
         <Box marginTop="3">
           Transaction failed: {sendTransactionError}
         </Box>
       )}
       {!inProgress ? (
-        <Button
-          marginTop="5"
-          label="Call contract"
-          disabled={
-            contractAddress === '' &&
-            contractAbi === '' &&
-            contractMethod === '' &&
-            contractMethodArgs === ''
-          }
-          onClick={() => callContract() }
-        />
+        <Box>
+          <Button
+            marginTop="5"
+            marginRight="2"
+            label="Check fee options"
+            disabled={
+              contractAddress === '' &&
+              contractAbi === '' &&
+              contractMethod === '' &&
+              contractMethodArgs === ''
+            }
+            onClick={() => checkFeeOptions()}
+          />
+          <Button
+            marginTop="5"
+            label="Call contract"
+            disabled={
+              contractAddress === '' &&
+              contractAbi === '' &&
+              contractMethod === '' &&
+              contractMethodArgs === ''
+            }
+            onClick={() => callContract() }
+          />
+        </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
           <Spinner />
