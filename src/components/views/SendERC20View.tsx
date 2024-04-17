@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
-import { ethers } from "ethers"
+import { Box, Text, Button, TextInput, Spinner, Select } from '@0xsequence/design-system'
+import { ethers } from 'ethers'
 import { node, sequence } from '../../main'
 import { FeeOption, isSentTransactionResponse, Network, erc20 } from '@0xsequence/waas'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
+import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
 
 interface TokenOption {
   label: string
@@ -11,13 +11,13 @@ interface TokenOption {
 }
 
 const tokenOptions: TokenOption[] = [
-  { label: 'Custom Token', value: '' },
+  { label: 'Custom Token', value: 'Custom' },
   { label: 'USDC Old', value: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174' },
   { label: 'USDC New', value: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359' },
-  { label: 'DAI', value: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063' },
+  { label: 'DAI', value: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063' }
 ]
 
-export function SendERC20View(props: {network?: Network}) {
+export function SendERC20View(props: { network?: Network }) {
   const [selectedToken, setSelectedToken] = useState<string>(tokenOptions[0].value)
   const [customTokenAddress, setCustomTokenAddress] = useState<string>('')
   const [enabledCustomToken, setEnabledCustomToken] = useState<boolean>(true)
@@ -46,11 +46,15 @@ export function SendERC20View(props: {network?: Network}) {
 
     setTokenBalance('...')
 
-    const contract = new ethers.Contract(tokenAddress, [
-      'function balanceOf(address) view returns (uint256)',
-      'function decimals() view returns (uint8)',
-      'function symbol() view returns (string)'
-    ], node)
+    const contract = new ethers.Contract(
+      tokenAddress,
+      [
+        'function balanceOf(address) view returns (uint256)',
+        'function decimals() view returns (uint8)',
+        'function symbol() view returns (string)'
+      ],
+      node
+    )
 
     const [balance, decimals, symbol] = await Promise.all([
       contract.balanceOf(sequence.getAddress()),
@@ -64,11 +68,13 @@ export function SendERC20View(props: {network?: Network}) {
 
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [erc20({
-        token: customTokenAddress,
-        to: destinationAddress,
-        value: ethers.utils.parseUnits(amount, decimals).toString(),
-      })],
+      transactions: [
+        erc20({
+          token: customTokenAddress,
+          to: destinationAddress,
+          value: ethers.utils.parseUnits(amount, decimals).toString()
+        })
+      ],
       network: props.network
     })
 
@@ -112,7 +118,7 @@ export function SendERC20View(props: {network?: Network}) {
 
   const selectToken = (tokenAddress: string) => {
     setSelectedToken(tokenAddress)
-    if (tokenAddress === '') {
+    if (tokenAddress === 'Custom') {
       setCustomTokenAddress('')
       setEnabledCustomToken(true)
     } else {
@@ -124,12 +130,7 @@ export function SendERC20View(props: {network?: Network}) {
   return (
     <Box>
       <Box marginTop="5">
-        <Select
-          name="token"
-          options={tokenOptions}
-          value={selectedToken ?? ''}
-          onValueChange={(value) => selectToken(value)}
-        />
+        <Select name="token" options={tokenOptions} value={selectedToken ?? ''} onValueChange={value => selectToken(value)} />
         <Box marginTop="5">
           <TextInput
             type="text"
@@ -156,12 +157,7 @@ export function SendERC20View(props: {network?: Network}) {
       </Box>
 
       <Box marginTop="5">
-        <TextInput
-          type="text"
-          value={amount}
-          onChange={(e: any) => setAmount(e.target.value)}
-          placeholder="Amount"
-        />
+        <TextInput type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} placeholder="Amount" />
       </Box>
 
       {error && (
@@ -170,8 +166,8 @@ export function SendERC20View(props: {network?: Network}) {
         </Box>
       )}
 
-      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
-      { feeSponsored && (
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption} />
+      {feeSponsored && (
         <Box marginTop="5">
           <Text variant="normal" fontWeight="bold">
             Fee options: Tx Sponsored!
@@ -188,11 +184,7 @@ export function SendERC20View(props: {network?: Network}) {
             disabled={customTokenAddress === '' && destinationAddress === ''}
             onClick={() => checkFeeOptions()}
           />
-          <Button
-            marginTop="5"
-            label="Send Token"
-            onClick={sendToken}
-          />
+          <Button marginTop="5" label="Send Token" onClick={sendToken} />
         </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
