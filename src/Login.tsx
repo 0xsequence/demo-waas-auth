@@ -155,10 +155,16 @@ function Login() {
           </Text>
         </Box>
         {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-          <GoogleLogin onSuccess={handleGoogleLogin} shape="circle" width={230} nonce={sessionHash} />
+          <GoogleLogin
+            key={sessionHash}
+            onSuccess={handleGoogleLogin}
+            shape="circle" width={230}
+            nonce={sessionHash}
+          />
         )}
         {import.meta.env.VITE_APPLE_CLIENT_ID && (
           <AppleSignin
+            key={sessionHash}
             authOptions={{
               clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
               scope: 'openid email',
