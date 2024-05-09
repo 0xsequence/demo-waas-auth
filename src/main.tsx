@@ -12,6 +12,7 @@ import { ethers } from 'ethers'
 import './main.css'
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_ID_DEV = import.meta.env.VITE_GOOGLE_CLIENT_ID_DEV
 const SEQUENCE_PROJECT_ACCESS_KEY = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY
 const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
 const SEQUENCE_PROJECT_ACCESS_KEY_DEV = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY_DEV
@@ -23,13 +24,16 @@ const urlParams = new URLSearchParams(window.location.search)
 const targetEnv = urlParams.get('env') ?? 'prod'
 let projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
 let waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
+let googleClientId = urlParams.get('googleClientId') ?? GOOGLE_CLIENT_ID
 
 if (targetEnv === 'dev') {
   console.log('Using dev environment')
   console.log(`Project Access Key: ${SEQUENCE_PROJECT_ACCESS_KEY_DEV}`)
   console.log(`Waas Config Key: ${SEQUENCE_WAAS_CONFIG_KEY_DEV}`)
+  console.log(`Google Client ID: ${GOOGLE_CLIENT_ID_DEV}`)
   projectAccessKey = SEQUENCE_PROJECT_ACCESS_KEY_DEV
   waasConfigKey = SEQUENCE_WAAS_CONFIG_KEY_DEV
+  googleClientId = GOOGLE_CLIENT_ID_DEV
 }
 
 export const sequence = new SequenceWaaS({
@@ -52,7 +56,7 @@ export const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <GoogleOAuthProvider clientId={googleClientId}>
         <RouterProvider router={router} />
       </GoogleOAuthProvider>
     </ThemeProvider>
