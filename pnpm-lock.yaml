@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@0xsequence/design-system':
-        specifier: 1.2.5
-        version: 1.2.5(@types/react-dom@18.2.7)(@types/react@18.2.15)(framer-motion@10.16.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 1.6.3
+        version: 1.6.3(@types/react-dom@18.2.7)(@types/react@18.2.15)(framer-motion@10.16.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@0xsequence/indexer':
         specifier: 1.9.26
         version: 1.9.26
@@ -98,8 +98,8 @@ packages:
     peerDependencies:
       ethers: '>=5.5'
 
-  '@0xsequence/design-system@1.2.5':
-    resolution: {integrity: sha512-nmXSPX9X/quuZOAMn1lSx1rnhUBzKBft9G/A64ygd7P+pwC28mG/1iU7LbQz+PKebuSTELFbntfmucUnyjAkYA==}
+  '@0xsequence/design-system@1.6.3':
+    resolution: {integrity: sha512-to1Gpo/ilOi1Xa+O1oRx4faXBWmqhzGedkVbWHRar5PWNp+RjBaG8bm0qI2j6S7vpTVgK3pLHoiF6/0JdwMcmA==}
     peerDependencies:
       framer-motion: '>=6'
       react: '>=17'
@@ -2520,7 +2520,7 @@ snapshots:
       '@0xsequence/abi': 1.9.26
       ethers: 5.7.2
 
-  '@0xsequence/design-system@1.2.5(@types/react-dom@18.2.7)(@types/react@18.2.15)(framer-motion@10.16.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@0xsequence/design-system@1.6.3(@types/react-dom@18.2.7)(@types/react@18.2.15)(framer-motion@10.16.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.15)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-checkbox': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.15)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)

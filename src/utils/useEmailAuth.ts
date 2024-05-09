@@ -16,6 +16,7 @@ export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => vo
       setInstance(instance)
       setEmail(email)
     } catch (e: any) {
+      console.error(e)
       setError(e.message || "Unknown error")
     } finally {
       setLoading(false)

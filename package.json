@@ -14,7 +14,7 @@
     "clear:vite:cache": "rm -rf node_modules/.vite/"
   },
   "dependencies": {
-    "@0xsequence/design-system": "1.2.5",
+    "@0xsequence/design-system": "1.6.3",
     "@0xsequence/indexer": "1.9.26",
     "@0xsequence/network": "1.9.26",
     "@0xsequence/waas": "1.9.26",

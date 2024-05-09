@@ -1,4 +1,4 @@
-import { Box, Text, TextInput, Button, Spinner } from '@0xsequence/design-system'
+import { Box, Text, TextInput, Button, Spinner, useTheme } from '@0xsequence/design-system'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 
 import { router, sequence } from './main'
@@ -19,6 +19,7 @@ function Login() {
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
   const [signingIn, setSigningIn] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   const {
       inProgress: emailAuthInProgress,
@@ -65,6 +66,10 @@ function Login() {
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
       <Box marginBottom="16">
         <Logo />
+      </Box>
+
+      <Box>
+        <Button variant="primary" label="Change theme" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
       </Box>
 
       <Box>
