@@ -14,12 +14,23 @@ import './main.css'
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 const SEQUENCE_PROJECT_ACCESS_KEY = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY
 const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
+const SEQUENCE_PROJECT_ACCESS_KEY_DEV = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY_DEV
+const SEQUENCE_WAAS_CONFIG_KEY_DEV = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY_DEV
 
 export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 const urlParams = new URLSearchParams(window.location.search)
-const projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
-const waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
+const targetEnv = urlParams.get('env') ?? 'prod'
+let projectAccessKey = urlParams.get('projectAccessKey') ?? SEQUENCE_PROJECT_ACCESS_KEY
+let waasConfigKey = urlParams.get('waasConfigKey') ?? SEQUENCE_WAAS_CONFIG_KEY
+
+if (targetEnv === 'dev') {
+  console.log('Using dev environment')
+  console.log(`Project Access Key: ${SEQUENCE_PROJECT_ACCESS_KEY_DEV}`)
+  console.log(`Waas Config Key: ${SEQUENCE_WAAS_CONFIG_KEY_DEV}`)
+  projectAccessKey = SEQUENCE_PROJECT_ACCESS_KEY_DEV
+  waasConfigKey = SEQUENCE_WAAS_CONFIG_KEY_DEV
+}
 
 export const sequence = new SequenceWaaS({
   network: 'polygon',
