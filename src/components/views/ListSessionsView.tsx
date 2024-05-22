@@ -45,6 +45,7 @@ export function ListSessionsView() {
       </Text>
       { sessions && <>
         { sessions.map(s => <Box key={s.id}>
+          <Text variant="normal" color="text100" fontWeight="normal">
           {s.friendlyName}
           {!s.isThis && <a style={{
             marginLeft: '7px',
@@ -52,6 +53,7 @@ export function ListSessionsView() {
             cursor: 'pointer'
           }} onClick={() => closeSession(s.id)}>x</a>}
           {s.isThis && <> (current)</>}
+          </Text>
         </Box>) }
       </> }
       { loading && <Spinner /> }

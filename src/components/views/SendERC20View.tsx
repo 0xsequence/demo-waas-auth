@@ -143,7 +143,7 @@ export function SendERC20View(props: { network?: Network }) {
       </Box>
 
       <Box marginTop="3">
-        <Text variant="normal">Token Balance: {tokenBalance}</Text>
+        <Text variant="normal" color="text100">Token Balance: {tokenBalance}</Text>
         <Button marginLeft="2" size="xs" label="Fetch" onClick={() => fetchTokenBalance(customTokenAddress)} />
       </Box>
 

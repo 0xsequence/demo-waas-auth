@@ -119,7 +119,7 @@ export function SendTransactionsView(props: {network?: Network}) {
 
   return (
     <Box>
-      <Text variant="normal" fontWeight="bold">
+      <Text variant="normal" color="text100" fontWeight="bold">
         Native token balance: {ethers.utils.formatEther(nativeTokenBalance || 0)} {nativeTokenName}
       </Text>
       <Button marginLeft="2" size="xs" label="Fetch" onClick={fetchNativeTokenBalance} />

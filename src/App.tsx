@@ -132,13 +132,15 @@ function App() {
         </Box>
 
         <Box marginBottom="5">
-          {walletAddress ? (
-            <Box>
-              <Text>{walletAddress}</Text>
-            </Box>
-          ) : (
-            <Spinner />
-          )}
+          <Text variant="normal" color="text100" fontWeight="normal">
+            {walletAddress ? (
+              <Box>
+                <Text>{walletAddress}</Text>
+              </Box>
+            ) : (
+              <Spinner />
+            )}
+          </Text>
         </Box>
 
         <Box marginBottom="5">
