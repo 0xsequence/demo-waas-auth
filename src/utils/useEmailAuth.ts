@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { sequence } from '../main'
 
 
-export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => void }) {
+export function useEmailAuth({ onSuccess, sessionName }: { onSuccess: (res: { wallet: string, sessionId: string }) => void, sessionName: string }) {
   const [email, setEmail]  = useState("")
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
@@ -12,8 +12,8 @@ export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => vo
     setLoading(true)
 
     try {
-      const { instance } = await sequence.email.initiateAuth({ email })
-      setInstance(instance)
+      const instance = await sequence.initiateEmailAuth(email)
+      setInstance(instance!)
       setEmail(email)
     } catch (e: any) {
       console.error(e)
@@ -27,9 +27,8 @@ export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => vo
     setLoading(true)
 
     try {
-      const sessionHash = await sequence.getSessionHash()
-      const { idToken } = await sequence.email.finalizeAuth({ instance, answer, email, sessionHash })
-      onSuccess(idToken)
+      const res = await sequence.completeEmailAuth({ challenge: instance, answer, email, sessionName })
+      onSuccess(res)
     } catch (e: any) {
       setError(e.message || "Unknown error")
     } finally {

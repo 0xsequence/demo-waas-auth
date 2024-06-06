@@ -18,7 +18,6 @@ function Login() {
   const isEmailValid = inputRef.current?.validity.valid
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
-  const [signingIn, setSigningIn] = useState(false)
   const { theme, setTheme } = useTheme()
 
   const {
@@ -27,10 +26,9 @@ function Login() {
       initiateAuth: initiateEmailAuth,
       sendChallengeAnswer,
   } = useEmailAuth({
-      onSuccess: async (idToken) => {
-          setSigningIn(true)
-          const walletAddress = await sequence.signIn({ idToken }, randomName())
-          console.log(`Wallet address: ${walletAddress}`)
+      sessionName: randomName(),
+      onSuccess: async ({ wallet }) => {
+          console.log(`Wallet address: ${wallet}`)
           router.navigate('/')
       },
   })
@@ -90,7 +88,7 @@ function Login() {
           </Box>
 
           <Box gap="2" marginY="4">
-            {emailAuthLoading || signingIn ? (
+            {emailAuthLoading ? (
               <Spinner />
             ) : (
               <Button
