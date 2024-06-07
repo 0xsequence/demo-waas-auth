@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Box, Text, Button, TextInput, Spinner, Select } from '@0xsequence/design-system'
 import { ethers } from 'ethers'
-import { node, sequence } from '../../main'
+import { sequence } from '../../main'
 import { FeeOption, isSentTransactionResponse, Network, erc20 } from '@0xsequence/waas'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
 
@@ -46,6 +46,7 @@ export function SendERC20View(props: { network?: Network }) {
 
     setTokenBalance('...')
 
+    const node = new ethers.providers.JsonRpcProvider(`https://nodes.sequence.app/${props.network?.name}`)
     const contract = new ethers.Contract(
       tokenAddress,
       [
@@ -56,14 +57,18 @@ export function SendERC20View(props: { network?: Network }) {
       node
     )
 
-    const [balance, decimals, symbol] = await Promise.all([
-      contract.balanceOf(sequence.getAddress()),
-      contract.decimals(),
-      contract.symbol()
-    ])
+    try {
+      const [balance, decimals, symbol] = await Promise.all([
+        contract.balanceOf(sequence.getAddress()),
+        contract.decimals(),
+        contract.symbol()
+      ])
 
-    setDecimals(decimals)
-    setTokenBalance(`${ethers.utils.formatUnits(balance, decimals)} ${symbol}`)
+      setDecimals(decimals)
+      setTokenBalance(`${ethers.utils.formatUnits(balance, decimals)} ${symbol}`)
+    } catch (e) {
+      setTokenBalance('---')
+    }
   }
 
   const checkFeeOptions = async () => {
