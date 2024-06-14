@@ -5,7 +5,7 @@ import { router, sequence } from './main'
 
 import { PINCodeInput } from './components/PINCodeInput'
 import { Logo } from './components/Logo'
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google'
+import {CredentialResponse, GoogleLogin, useGoogleLogin} from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
@@ -20,6 +20,25 @@ function Login() {
   const [code, setCode] = useState<string[]>([])
   const [signingIn, setSigningIn] = useState(false)
   const { theme, setTheme } = useTheme()
+
+  const handleGooglePlayfabLogin = useGoogleLogin({
+    flow: 'implicit',
+    onSuccess: tokenResponse => {
+      (window as any).PlayFabClientSDK.LoginWithGoogleAccount({
+        AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
+        CreateAccount: true,
+        TitleId: "8F854", // TODO: PUT YOUR TITLE ID HERE!
+      }, async (response, error) => {
+        if (response) {
+          const seqRes = await sequence.signInWithPlayfab("8F854", response.data.SessionTicket, randomName())
+          console.log("Sequence response:", seqRes)
+          router.navigate('/')
+        } else if (error) {
+          console.log("Error: " + JSON.stringify(error));
+        }
+      });
+    },
+  })
 
   const {
       inProgress: emailAuthInProgress,
@@ -44,21 +63,23 @@ function Login() {
   }, [])
 
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
-    const walletAddress = await sequence.signIn({
+    const res = await sequence.signIn({
       idToken: tokenResponse.credential!
     }, randomName())
 
-    console.log(`Wallet address: ${walletAddress}`)
+    console.log(`Wallet address: ${res.wallet}`)
+    console.log(`Email address: ${res.email}`)
     router.navigate('/')
   }
 
   const appleRedirectUri = 'https://' + window.location.host + (window.location.host.includes("github.io") ? '/demo-waas-auth' : '')
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
-    const walletAddress = await sequence.signIn({
+    const res = await sequence.signIn({
         idToken: response.authorization.id_token,
     }, randomName())
 
-    console.log(`Wallet address: ${walletAddress}`)
+    console.log(`Wallet address: ${res.wallet}`)
+    console.log(`Email address: ${res.email}`)
     router.navigate('/')
   }
 
@@ -153,23 +174,26 @@ function Login() {
 
       <hr/>
 
+      <Box paddingY="4">
       {!emailAuthInProgress && !!sessionHash && (<>
-        <Box>
+        <Box marginBottom="4">
           <Text variant="large" color="text100" fontWeight="bold">
             Social Login
           </Text>
         </Box>
         {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          <Box>
           <GoogleLogin
-            key={sessionHash}
+            key={"google-"+sessionHash}
             onSuccess={handleGoogleLogin}
             shape="circle" width={230}
             nonce={sessionHash}
           />
+          </Box>
         )}
         {import.meta.env.VITE_APPLE_CLIENT_ID && (
           <AppleSignin
-            key={sessionHash}
+            key={"apple-"+sessionHash}
             authOptions={{
               clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
               scope: 'openid email',
@@ -183,6 +207,21 @@ function Login() {
           />
         )}
       </>)}
+      </Box>
+
+      <hr />
+
+      <Box paddingY="4">
+        <Box marginBottom="4">
+          <Text variant="large" color="text100" fontWeight="bold" style={{ animation: `blinker 0.5s infinite` }}>
+            Playfab login
+          </Text>
+        </Box>
+
+        <Box>
+          <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
+        </Box>
+      </Box>
 
     </Box>
   )
