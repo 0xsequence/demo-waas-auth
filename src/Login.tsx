@@ -10,6 +10,10 @@ import AppleSignin from 'react-apple-signin-auth'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from "./utils/useEmailAuth.ts";
 import {useSessionHash} from "./utils/useSessionHash.ts";
+import {useEmailAuthV2} from "./utils/useEmailAuthV2.ts";
+
+const urlParams = new URLSearchParams(window.location.search)
+const targetEnv = urlParams.get('env') ?? 'prod'
 
 function Login() {
   const { sessionHash } = useSessionHash()
@@ -25,11 +29,17 @@ function Login() {
       loading: emailAuthLoading,
       initiateAuth: initiateEmailAuth,
       sendChallengeAnswer,
-  } = useEmailAuth({
+  } = targetEnv === 'dev' ? useEmailAuthV2({
       sessionName: randomName(),
       onSuccess: async ({ wallet }) => {
-          console.log(`Wallet address: ${wallet}`)
-          router.navigate('/')
+        console.log(`Wallet address: ${wallet}`)
+        router.navigate('/')
+      },
+  }) : useEmailAuth({
+      onSuccess: async (idToken) => {
+        const walletAddress = await sequence.signIn({ idToken }, randomName())
+        console.log(`Wallet address: ${walletAddress}`)
+        router.navigate('/')
       },
   })
 
