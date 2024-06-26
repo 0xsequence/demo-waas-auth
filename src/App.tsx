@@ -15,6 +15,7 @@ import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
 import { EOALinkView } from './components/views/EOALinkView'
 import { NetworkSwitch } from './components/NetworkSwitch.tsx'
+import { ListAccountsView } from './components/views/ListAccountsView.tsx'
 import { Network } from '@0xsequence/waas'
 
 function App() {
@@ -175,6 +176,7 @@ function App() {
           <Divider background="buttonGlass" />
           <EOALinkView network={network} walletAddress={walletAddress} />
         </Collapsible>
+        <ListAccountsView />
       </Box>
     </>
   )
