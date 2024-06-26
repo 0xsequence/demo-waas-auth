@@ -70,6 +70,13 @@ function Login() {
     router.navigate('/')
   }
 
+  const handleGuestLogin = async () => {
+    const challenge = await sequence.initAuth()
+    const res = await sequence.completeAuth(challenge)
+    console.log(`Wallet address: ${res.wallet}`)
+    router.navigate('/')
+  }
+
   return (
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
       <Box marginBottom="16">
@@ -77,6 +84,7 @@ function Login() {
       </Box>
 
       <Box>
+        <Button label="Guest login" onClick={handleGuestLogin} />
         <Button variant="primary" label="Change theme" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
       </Box>
 
