@@ -7,21 +7,3 @@
 body {
   background: var(--seq-colors-background-primary);
 }
-
-@keyframes blinker {
-  from {
-    color: white;
-    transform: scale(1.0);
-    font-size: 20px;
-  }
-  50% {
-    color: red;
-    transform: scale(1.5);
-    font-size: 25px;
-  }
-  to {
-    color: white;
-    transform: scale(1.0);
-    font-size: 20px;
-  }
-}

@@ -33,7 +33,7 @@ function Login() {
         TitleId: "8F854", // TODO: PUT YOUR TITLE ID HERE!
       }, async (response, error) => {
         if (response) {
-          const seqRes = await sequence.signInWithPlayfab("8F854", response.data.SessionTicket, randomName())
+          const seqRes = await sequence.signIn({ playFabTitleId: "8F854", playFabSessionTicket: response.data.SessionTicket }, randomName())
           console.log("Sequence response:", seqRes)
           router.navigate('/')
         } else if (error) {
@@ -229,7 +229,7 @@ function Login() {
 
       <Box paddingY="4">
         <Box marginBottom="4">
-          <Text variant="large" color="text100" fontWeight="bold" style={{ animation: `blinker 0.5s infinite` }}>
+          <Text variant="large" color="text100" fontWeight="bold">
             Playfab login
           </Text>
         </Box>
