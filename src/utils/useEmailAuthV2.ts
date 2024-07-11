@@ -1,14 +1,20 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { sequence } from '../main'
 
-export function useEmailAuthV2({ onSuccess, sessionName }: { onSuccess: (res: { wallet: string, sessionId: string }) => void, sessionName: string }) {
+export function useEmailAuthV2({
+  onSuccess,
+  sessionName
+}: {
+  onSuccess: (res: { wallet: string; sessionId: string }) => void
+  sessionName: string
+}) {
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
   const [inProgress, setInProgress] = useState(false)
   const [respondWithCode, setRespondWithCode] = useState<((code: string) => Promise<void>) | null>()
 
   useEffect(() => {
-    return sequence.onEmailAuthCodeRequired(async (respondWithCode) => {
+    return sequence.onEmailAuthCodeRequired(async respondWithCode => {
       setLoading(false)
       setRespondWithCode(() => respondWithCode)
     })
@@ -18,10 +24,11 @@ export function useEmailAuthV2({ onSuccess, sessionName }: { onSuccess: (res: { 
     setLoading(true)
     setInProgress(true)
     try {
+      console.log('using email auth v2')
       const res = await sequence.signIn({ email }, sessionName)
       onSuccess(res)
     } catch (e: any) {
-      setError(e.message || "Unknown error")
+      setError(e.message || 'Unknown error')
     } finally {
       setLoading(false)
       setInProgress(false)
@@ -39,6 +46,6 @@ export function useEmailAuthV2({ onSuccess, sessionName }: { onSuccess: (res: { 
     initiateAuth,
     loading,
     error,
-    sendChallengeAnswer: inProgress ? sendChallengeAnswer : undefined,
+    sendChallengeAnswer: inProgress ? sendChallengeAnswer : undefined
   }
 }

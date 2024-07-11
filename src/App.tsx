@@ -152,6 +152,8 @@ function App() {
         <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
         <Divider background="buttonGlass" />
         <ListSessionsView />
+        <Divider background="buttonGlass" />
+
         <Collapsible marginY={'3'} label="Send native token transaction">
           <Divider background="buttonGlass" />
           <SendTransactionsView network={network} />
