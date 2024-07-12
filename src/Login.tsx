@@ -59,20 +59,6 @@ function Login() {
           } else if (error) {
             console.log('Error: ' + JSON.stringify(error))
           }
-
-          // if (response) {
-          //   console.log(JSON.stringify(response, null, 2))
-          //   try {
-          //     const challenge = await sequence.initAuth({
-          //       playFabTitleId: '8F854',
-          //       playFabSessionTicket: response.data.SessionTicket
-          //     })
-          //     const res = await sequence.completeAuth(challenge, { forceCreateAccount: true })
-          //     console.log('Sequence response:', res)
-          //   } catch (e) {
-          //     console.error(e)
-          //   }
-          // }
         }
       )
     }
@@ -136,9 +122,8 @@ function Login() {
   }
 
   const handleGuestLogin = async () => {
-    const challenge = await sequence.signIn({ guest: true })
-    const res = await sequence.completeAuth(challenge)
-    console.log(`Wallet address: ${res.wallet}`)
+    const signInResponse = await sequence.signIn({ guest: true }, randomName())
+    console.log(`Wallet address: ${signInResponse.wallet}`)
     router.navigate('/')
   }
 
