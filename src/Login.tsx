@@ -13,6 +13,7 @@ import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useSessionHash } from './utils/useSessionHash.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
+import {StytchLogin} from "./components/StytchLogin.tsx";
 
 const urlParams = new URLSearchParams(window.location.search)
 const targetEnv = urlParams.get('env') ?? 'prod'
@@ -280,6 +281,10 @@ function Login() {
             <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
           </Box>
         </Box>
+
+        {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && (
+          <StytchLogin />
+        )}
       </Box>
 
       {isEmailConflictModalOpen && (

@@ -19,6 +19,8 @@
     "@0xsequence/network": "1.9.26",
     "@0xsequence/waas": "0.0.0-20240712130815",
     "@react-oauth/google": "^0.11.1",
+    "@stytch/react": "^18.1.0",
+    "@stytch/vanilla-js": "^4.13.2",
     "@vanilla-extract/css": "^1.12.0",
     "axios": "^1.6.0",
     "ethers": "5.7.2",
