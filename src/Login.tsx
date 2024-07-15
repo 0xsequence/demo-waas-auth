@@ -43,13 +43,16 @@ function Login() {
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
-          TitleId: '8F854' // TODO: PUT YOUR TITLE ID HERE!
+          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
         },
         async (response, error) => {
           if (response) {
             try {
               const seqRes = await sequence.signIn(
-                { playFabTitleId: '8F854', playFabSessionTicket: response.data.SessionTicket },
+                {
+                  playFabTitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
+                  playFabSessionTicket: response.data.SessionTicket,
+                },
                 randomName()
               )
               console.log('Sequence response:', seqRes)
@@ -270,17 +273,19 @@ function Login() {
 
         <Divider background="buttonGlass" />
 
-        <Box paddingY="4">
-          <Box marginBottom="4">
-            <Text variant="large" color="text100" fontWeight="bold">
-              Playfab login
-            </Text>
-          </Box>
+        {import.meta.env.VITE_PLAYFAB_TITLE_ID && (
+          <Box paddingY="4">
+            <Box marginBottom="4">
+              <Text variant="large" color="text100" fontWeight="bold">
+                Playfab login
+              </Text>
+            </Box>
 
-          <Box>
-            <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
+            <Box>
+              <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
+            </Box>
           </Box>
-        </Box>
+        )}
 
         {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && (
           <StytchLogin />

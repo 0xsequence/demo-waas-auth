@@ -117,14 +117,14 @@ export function ListAccountsView() {
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
-          TitleId: '8F854' // TODO: PUT YOUR TITLE ID HERE!
+          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
         },
         async (response, error) => {
           if (response) {
             try {
               const challange = await sequence.initAuth({
-                playFabTitleId: '8F854',
-                playFabSessionTicket: response.data.SessionTicket
+                playFabTitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
+                playFabSessionTicket: response.data.SessionTicket,
               })
 
               const federateResponse = await sequence.federateAccount(challange)
@@ -212,13 +212,16 @@ export function ListAccountsView() {
           />
         )}
 
-        <Divider background="buttonGlass" width="full" />
-
-        <Box marginTop="2">
-          <Box>
-            <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
-          </Box>
-        </Box>
+        {import.meta.env.VITE_PLAYFAB_TITLE_ID && (
+          <>
+            <Divider background="buttonGlass" width="full" />
+            <Box marginTop="2">
+              <Box>
+                <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
+              </Box>
+            </Box>
+          </>
+        )}
 
         <Divider background="buttonGlass" width="full" />
 
