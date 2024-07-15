@@ -5,11 +5,11 @@ import { Challenge } from '@0xsequence/waas'
 export function useEmailAuthV2({
   onSuccess,
   sessionName,
-  federateAccount = false
+  linkAccount = false
 }: {
   onSuccess: (res: { wallet: string; sessionId: string }) => void
   sessionName: string
-  federateAccount?: boolean
+  linkAccount?: boolean
 }) {
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
@@ -29,7 +29,7 @@ export function useEmailAuthV2({
     setLoading(true)
     setInProgress(true)
     try {
-      if (federateAccount) {
+      if (linkAccount) {
         const challenge = await sequence.initAuth({ email })
         setChallenge(challenge)
         setLoading(false)
@@ -40,7 +40,7 @@ export function useEmailAuthV2({
     } catch (e: any) {
       setError(e.message || 'Unknown error')
     } finally {
-      if (!federateAccount) {
+      if (!linkAccount) {
         setLoading(false)
         setInProgress(false)
       }
@@ -48,9 +48,9 @@ export function useEmailAuthV2({
   }
 
   const sendChallengeAnswer = async (answer: string) => {
-    if (federateAccount && challenge) {
+    if (linkAccount && challenge) {
       //completeAuth(challenge.withAnswer(answer), { sessionName })
-      await sequence.federateAccount(challenge.withAnswer(answer))
+      await sequence.linkAccount(challenge.withAnswer(answer))
       setLoading(false)
       setInProgress(false)
       return

@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, Divider, PINCodeInput, Spinner, Text, TextInput } from '@0xsequence/design-system'
-import { useEffect, useRef, useState } from 'react'
+import {SetStateAction, useEffect, useRef, useState} from 'react'
 import { Account, IdentityType } from '@0xsequence/waas'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
@@ -77,7 +77,7 @@ export function ListAccountsView() {
     onSuccess: async ({ wallet }) => {
       console.log(`Wallet address: ${wallet}`)
     },
-    federateAccount: true
+    linkAccount: true
   })
 
   const removeAccount = async (id: string) => {
@@ -98,28 +98,28 @@ export function ListAccountsView() {
 
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
     const challenge = await sequence.initAuth({ idToken: tokenResponse.credential! })
-    const federateResponse = await sequence.federateAccount(challenge)
-    setAccounts(accounts => [...(accounts || []), federateResponse.account])
+    const linkResponse = await sequence.linkAccount(challenge)
+    setAccounts(accounts => [...(accounts || []), linkResponse.account])
   }
 
   const appleRedirectUri =
     'https://' + window.location.host + (window.location.host.includes('github.io') ? '/demo-waas-auth' : '/')
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const challenge = await sequence.initAuth({ idToken: response.authorization.id_token })
-    const federateResponse = await sequence.federateAccount(challenge)
-    setAccounts(accounts => [...(accounts || []), federateResponse.account])
+    const linkResponse = await sequence.linkAccount(challenge)
+    setAccounts(accounts => [...(accounts || []), linkResponse.account])
   }
 
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      ;(window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
           TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
         },
-        async (response, error) => {
+        async (response?: { data: { SessionTicket: string } }, error?: Error) => {
           if (response) {
             try {
               const challange = await sequence.initAuth({
@@ -127,11 +127,11 @@ export function ListAccountsView() {
                 playFabSessionTicket: response.data.SessionTicket,
               })
 
-              const federateResponse = await sequence.federateAccount(challange)
+              const linkResponse = await sequence.linkAccount(challange)
 
-              console.log('playfab account', JSON.stringify(federateResponse.account, null, 2))
+              console.log('playfab account', JSON.stringify(linkResponse.account, null, 2))
 
-              setAccounts(accounts => [...(accounts || []), federateResponse.account])
+              setAccounts(accounts => [...(accounts || []), linkResponse.account])
             } catch (e) {
               console.error(e)
             }
