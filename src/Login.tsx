@@ -1,4 +1,4 @@
-import { Box, Text, TextInput, Button, Spinner, useTheme, Checkbox, Divider, Modal } from '@0xsequence/design-system'
+import { Box, Text, TextInput, Button, Spinner, Checkbox, Divider, Modal } from '@0xsequence/design-system'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
@@ -14,9 +14,6 @@ import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useSessionHash } from './utils/useSessionHash.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
 import {StytchLogin} from "./components/StytchLogin.tsx";
-
-const urlParams = new URLSearchParams(window.location.search)
-const targetEnv = urlParams.get('env') ?? 'prod'
 
 function Login() {
   const { sessionHash } = useSessionHash()
@@ -39,13 +36,13 @@ function Login() {
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      ;(window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
           TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
         },
-        async (response, error) => {
+        async (response?: { data: { SessionTicket: string } }, error?: Error) => {
           if (response) {
             try {
               const seqRes = await sequence.signIn(
