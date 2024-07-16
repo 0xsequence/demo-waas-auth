@@ -40,7 +40,7 @@ function App() {
         setFetchWalletAddressError(e.message)
       })
 
-    sequence.listAccounts().then((response: any) => {
+    sequence.listAccounts().then((response) => {
       if (response.currentAccountId) {
         setCurrentAccount(response.accounts.find(account => account.id === response.currentAccountId))
       }

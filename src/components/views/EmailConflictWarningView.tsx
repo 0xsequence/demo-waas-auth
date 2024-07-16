@@ -1,4 +1,4 @@
-import { Box, Button, ChevronRightIcon, Text } from '@0xsequence/design-system'
+import { Box, Button, Text } from '@0xsequence/design-system'
 
 interface PaneProps {
   onCancel: () => void
