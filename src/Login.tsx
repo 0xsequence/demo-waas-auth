@@ -1,4 +1,4 @@
-import { Box, Text, TextInput, Button, Spinner, Checkbox, Divider, Modal } from '@0xsequence/design-system'
+import { Box, Text, TextInput, Button, Spinner, Checkbox, Divider, Modal, Switch } from '@0xsequence/design-system'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
@@ -13,7 +13,7 @@ import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useSessionHash } from './utils/useSessionHash.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
-import {StytchLogin} from "./components/StytchLogin.tsx";
+import { StytchLogin } from './components/StytchLogin.tsx'
 
 function Login() {
   const { sessionHash } = useSessionHash()
@@ -36,11 +36,11 @@ function Login() {
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      ;(window as any).PlayFabClientSDK.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
-          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
+          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID
         },
         async (response?: { data: { SessionTicket: string } }, error?: Error) => {
           if (response) {
@@ -48,7 +48,7 @@ function Login() {
               const seqRes = await sequence.signIn(
                 {
                   playFabTitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
-                  playFabSessionTicket: response.data.SessionTicket,
+                  playFabSessionTicket: response.data.SessionTicket
                 },
                 randomName()
               )
@@ -128,11 +128,31 @@ function Login() {
     router.navigate('/')
   }
 
+  const urlParams = new URLSearchParams(window.location.search)
+  const isDevEnv = urlParams.get('env') === 'dev'
+  const [useDevEnv, setUseDevEnv] = useState(isDevEnv)
+
   return (
     <>
       <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
-        <Box marginBottom="16">
+        <Box marginBottom="16" flexDirection="row">
           <Logo />
+          <Box marginLeft="auto">
+            <Switch
+              label="Use dev env"
+              checked={useDevEnv}
+              onCheckedChange={() => {
+                if (!useDevEnv) {
+                  urlParams.set('env', 'dev')
+                  window.location.search = urlParams.toString()
+                } else {
+                  urlParams.delete('env')
+                  window.location.search = urlParams.toString()
+                }
+                setUseDevEnv(!useDevEnv)
+              }}
+            />
+          </Box>
         </Box>
 
         <Box gap="4">
@@ -284,9 +304,7 @@ function Login() {
           </Box>
         )}
 
-        {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && (
-          <StytchLogin />
-        )}
+        {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && <StytchLogin />}
       </Box>
 
       {isEmailConflictModalOpen && (
