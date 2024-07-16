@@ -15,7 +15,8 @@ import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
 import { EOALinkView } from './components/views/EOALinkView'
 import { NetworkSwitch } from './components/NetworkSwitch.tsx'
-import { Network } from '@0xsequence/waas'
+import { accountToName, ListAccountsView } from './components/views/ListAccountsView.tsx'
+import { Account, IdentityType, Network } from '@0xsequence/waas'
 
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
@@ -27,6 +28,8 @@ function App() {
 
   const [network, setNetwork] = useState<undefined | Network>()
 
+  const [currentAccount, setCurrentAccount] = useState<Account>()
+
   useEffect(() => {
     sequence
       .getAddress()
@@ -36,6 +39,12 @@ function App() {
       .catch((e: Error) => {
         setFetchWalletAddressError(e.message)
       })
+
+    sequence.listAccounts().then((response: any) => {
+      if (response.currentAccountId) {
+        setCurrentAccount(response.accounts.find(account => account.id === response.currentAccountId))
+      }
+    })
   }, [])
 
   useEffect(() => {
@@ -100,12 +109,16 @@ function App() {
         </Box>
 
         <Box marginBottom="5" flexDirection="row">
-          <Text marginTop="1" variant="normal" color="text100">
-            Logged in with email:{' '}
-            {/* <Text fontWeight="bold" underline>
-              {email}
-            </Text> */}
-          </Text>
+          {currentAccount && (
+            <Box flexDirection="column" gap="2">
+              <Text marginTop="1" variant="normal" color="text100">
+                {currentAccount.type === IdentityType.Guest
+                  ? 'Guest account'
+                  : `Logged in with account type ${currentAccount.type}`}{' '}
+              </Text>
+              {currentAccount.type !== IdentityType.Guest && accountToName(currentAccount)}
+            </Box>
+          )}
 
           <Button
             marginLeft="auto"
@@ -144,13 +157,18 @@ function App() {
           </Text>
         </Box>
 
+        <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
+        <Divider background="buttonGlass" />
+        <ListSessionsView />
+
+        <Divider background="buttonGlass" />
+
         <Box marginBottom="5">
           <NetworkSwitch onNetworkChange={setNetwork}></NetworkSwitch>
         </Box>
 
-        <Box>{fetchWalletAddressError && <Text>Error fetching wallet address: {fetchWalletAddressError}</Text>}</Box>
         <Divider background="buttonGlass" />
-        <ListSessionsView />
+
         <Collapsible marginY={'3'} label="Send native token transaction">
           <Divider background="buttonGlass" />
           <SendTransactionsView network={network} />
@@ -175,6 +193,7 @@ function App() {
           <Divider background="buttonGlass" />
           <EOALinkView network={network} walletAddress={walletAddress} />
         </Collapsible>
+        <ListAccountsView />
       </Box>
     </>
   )

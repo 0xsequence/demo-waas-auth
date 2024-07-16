@@ -10,6 +10,7 @@ import { SequenceWaaS } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
 import './main.css'
+import {MaybeWithStytch} from "./components/MaybeWithStytch.tsx";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_ID_DEV = import.meta.env.VITE_GOOGLE_CLIENT_ID_DEV
@@ -57,8 +58,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
       <GoogleOAuthProvider clientId={googleClientId}>
-        <RouterProvider router={router} />
+        <MaybeWithStytch>
+          <RouterProvider router={router} />
+        </MaybeWithStytch>
       </GoogleOAuthProvider>
     </ThemeProvider>
   </React.StrictMode>
 )
+
+
