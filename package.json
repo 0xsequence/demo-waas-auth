@@ -17,7 +17,7 @@
     "@0xsequence/design-system": "1.6.3",
     "@0xsequence/indexer": "1.9.26",
     "@0xsequence/network": "1.9.26",
-    "@0xsequence/waas": "0.0.0-20240715202213",
+    "@0xsequence/waas": "0.0.0-20240716125045",
     "@react-oauth/google": "^0.11.1",
     "@stytch/react": "^18.1.0",
     "@stytch/vanilla-js": "^4.13.2",
