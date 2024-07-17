@@ -23,7 +23,7 @@ function Login() {
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
 
-  const [v2EmailLoginEnabled, setV2EmailLoginEnabled] = useState(true)
+  const [isEmailV2Enabled, setIsEmailV2Enabled] = useState(true)
 
   const [isEmailConflictModalOpen, setIsEmailConflictModalOpen] = useState(false)
   const forceCreateFuncRef = useRef<(() => Promise<void>) | null>(null)
@@ -66,25 +66,35 @@ function Login() {
   })
 
   const {
-    inProgress: emailAuthInProgress,
-    loading: emailAuthLoading,
-    initiateAuth: initiateEmailAuth,
-    sendChallengeAnswer
-  } = v2EmailLoginEnabled
-    ? useEmailAuthV2({
-        sessionName: randomName(),
-        onSuccess: async ({ wallet }) => {
-          console.log(`Wallet address: ${wallet}`)
-          router.navigate('/')
-        }
-      })
-    : useEmailAuth({
-        onSuccess: async idToken => {
-          const walletAddress = await sequence.signIn({ idToken }, randomName())
-          console.log(`Wallet address: ${walletAddress}`)
-          router.navigate('/')
-        }
-      })
+    inProgress: emailV2AuthInProgress,
+    loading: emailV2AuthLoading,
+    initiateAuth: initiateEmailV2Auth,
+    sendChallengeAnswer: sendChallengeAnswerV2
+  } = useEmailAuthV2({
+    sessionName: randomName(),
+    onSuccess: async ({ wallet }) => {
+      console.log(`Wallet address: ${wallet}`)
+      router.navigate('/')
+    }
+  })
+
+  const {
+    inProgress: emailV1AuthInProgress,
+    loading: emailV1AuthLoading,
+    initiateAuth: initiateEmailV1Auth,
+    sendChallengeAnswer: sendChallengeAnswerV1
+  } = useEmailAuth({
+    onSuccess: async idToken => {
+      const walletAddress = await sequence.signIn({ idToken }, randomName())
+      console.log(`Wallet address: ${walletAddress}`)
+      router.navigate('/')
+    }
+  })
+
+  const emailAuthInProgress = isEmailV2Enabled ? emailV2AuthInProgress : emailV1AuthInProgress
+  const emailAuthLoading = isEmailV2Enabled ? emailV2AuthLoading : emailV1AuthLoading
+  const initiateEmailAuth = isEmailV2Enabled ? initiateEmailV2Auth : initiateEmailV1Auth
+  const sendChallengeAnswer = isEmailV2Enabled ? sendChallengeAnswerV2 : sendChallengeAnswerV1
 
   useEffect(() => {
     ;(async () => {
@@ -169,8 +179,10 @@ function Login() {
           <Box marginTop="4">
             <Checkbox
               label="Use v2 email login"
-              checked={v2EmailLoginEnabled}
-              onChange={() => setV2EmailLoginEnabled(!v2EmailLoginEnabled)}
+              checked={isEmailV2Enabled}
+              onCheckedChange={() => {
+                setIsEmailV2Enabled(!isEmailV2Enabled)
+              }}
             />
           </Box>
         </Box>
