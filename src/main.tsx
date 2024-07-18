@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@0xsequence/design-system/styles.css'
-import { ThemeProvider } from '@0xsequence/design-system'
-import {createHashRouter, RouterProvider} from 'react-router-dom'
+import { ThemeProvider, ToastProvider } from '@0xsequence/design-system'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 
 import Login from './Login.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
@@ -10,7 +10,7 @@ import { SequenceWaaS } from '@0xsequence/waas'
 import App from './App.tsx'
 import { ethers } from 'ethers'
 import './main.css'
-import {MaybeWithStytch} from "./components/MaybeWithStytch.tsx";
+import { MaybeWithStytch } from './components/MaybeWithStytch.tsx'
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_ID_DEV = import.meta.env.VITE_GOOGLE_CLIENT_ID_DEV
@@ -40,7 +40,7 @@ if (targetEnv === 'dev') {
 export const sequence = new SequenceWaaS({
   network: 'polygon',
   projectAccessKey: projectAccessKey,
-  waasConfigKey: waasConfigKey,
+  waasConfigKey: waasConfigKey
 })
 
 export const router = createHashRouter([
@@ -57,13 +57,13 @@ export const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <GoogleOAuthProvider clientId={googleClientId}>
-        <MaybeWithStytch>
-          <RouterProvider router={router} />
-        </MaybeWithStytch>
-      </GoogleOAuthProvider>
+      <ToastProvider>
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <MaybeWithStytch>
+            <RouterProvider router={router} />
+          </MaybeWithStytch>
+        </GoogleOAuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   </React.StrictMode>
 )
-
-

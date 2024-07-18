@@ -1,5 +1,5 @@
-import { Box, Button, Checkbox, Divider, PINCodeInput, Spinner, Text, TextInput } from '@0xsequence/design-system'
-import {SetStateAction, useEffect, useRef, useState} from 'react'
+import { Box, Button, Checkbox, Divider, PINCodeInput, Spinner, Text, TextInput, useToast } from '@0xsequence/design-system'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { Account, IdentityType } from '@0xsequence/waas'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
@@ -8,18 +8,31 @@ import { sequence } from '../../main'
 
 import { useEmailAuthV2 } from '../../utils/useEmailAuthV2'
 import { randomName } from '../../utils/indexer'
+import { isAccountAlreadyLinkedError } from '../../utils/error'
 
 export function accountToName(acc: Account) {
   if (acc.type === IdentityType.Email) {
-    return <>Email ({acc.email})</>
+    return (
+      <Text variant="normal" color="text100">
+        ({acc.email})
+      </Text>
+    )
   }
 
   if (acc.type === IdentityType.Guest) {
-    return <>Guest account</>
+    return (
+      <Text variant="normal" color="text100">
+        Guest account
+      </Text>
+    )
   }
 
   if (acc.type === IdentityType.PlayFab) {
-    return <>PlayFab account ({acc.email})</>
+    return (
+      <Text variant="normal" color="text100">
+        ({acc.email})
+      </Text>
+    )
   }
 
   switch (acc.issuer) {
@@ -53,6 +66,8 @@ export function accountToName(acc: Account) {
 }
 
 export function ListAccountsView() {
+  const toast = useToast()
+
   const [currentAccount, setCurrentAccount] = useState<Account>()
   const [accounts, setAccounts] = useState<Account[]>()
   const [loading, setLoading] = useState<boolean>(true)
@@ -98,33 +113,54 @@ export function ListAccountsView() {
 
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
     const challenge = await sequence.initAuth({ idToken: tokenResponse.credential! })
-    const linkResponse = await sequence.linkAccount(challenge)
-    setAccounts(accounts => [...(accounts || []), linkResponse.account])
+
+    try {
+      const linkResponse = await sequence.linkAccount(challenge)
+      setAccounts(accounts => [...(accounts || []), linkResponse.account])
+    } catch (e) {
+      if (isAccountAlreadyLinkedError(e)) {
+        toast({
+          title: 'Account already linked',
+          description: 'This account is already linked to another wallet',
+          variant: 'error'
+        })
+      }
+    }
   }
 
   const appleRedirectUri =
     'https://' + window.location.host + (window.location.host.includes('github.io') ? '/demo-waas-auth' : '/')
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const challenge = await sequence.initAuth({ idToken: response.authorization.id_token })
-    const linkResponse = await sequence.linkAccount(challenge)
-    setAccounts(accounts => [...(accounts || []), linkResponse.account])
+    try {
+      const linkResponse = await sequence.linkAccount(challenge)
+      setAccounts(accounts => [...(accounts || []), linkResponse.account])
+    } catch (e) {
+      if (isAccountAlreadyLinkedError(e)) {
+        toast({
+          title: 'Account already linked',
+          description: 'This account is already linked to another wallet',
+          variant: 'error'
+        })
+      }
+    }
   }
 
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      ;(window as any).PlayFabClientSDK.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
-          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
+          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID
         },
         async (response?: { data: { SessionTicket: string } }, error?: Error) => {
           if (response) {
             try {
               const challange = await sequence.initAuth({
                 playFabTitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
-                playFabSessionTicket: response.data.SessionTicket,
+                playFabSessionTicket: response.data.SessionTicket
               })
 
               const linkResponse = await sequence.linkAccount(challange)
@@ -134,6 +170,14 @@ export function ListAccountsView() {
               setAccounts(accounts => [...(accounts || []), linkResponse.account])
             } catch (e) {
               console.error(e)
+
+              if (isAccountAlreadyLinkedError(e)) {
+                toast({
+                  title: 'Account already linked',
+                  description: 'This account is already linked to another wallet',
+                  variant: 'error'
+                })
+              }
             }
           } else if (error) {
             console.log('Error: ' + JSON.stringify(error))
