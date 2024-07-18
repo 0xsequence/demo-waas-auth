@@ -13,6 +13,7 @@ import { StytchLogin } from './components/StytchLogin.tsx'
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
+import { EmailConflictInfo } from '@0xsequence/waas'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -23,11 +24,13 @@ function Login() {
 
   const [isEmailV2Enabled, setIsEmailV2Enabled] = useState(true)
 
+  const [emailConflictInfo, setEmailConflictInfo] = useState<EmailConflictInfo | undefined>()
   const [isEmailConflictModalOpen, setIsEmailConflictModalOpen] = useState(false)
   const forceCreateFuncRef = useRef<(() => Promise<void>) | null>(null)
 
-  sequence.onEmailConflict(async forceCreate => {
+  sequence.onEmailConflict(async (info, forceCreate) => {
     forceCreateFuncRef.current = forceCreate
+    setEmailConflictInfo(info)
     setIsEmailConflictModalOpen(true)
   })
 
@@ -67,7 +70,8 @@ function Login() {
     inProgress: emailV2AuthInProgress,
     loading: emailV2AuthLoading,
     initiateAuth: initiateEmailV2Auth,
-    sendChallengeAnswer: sendChallengeAnswerV2
+    sendChallengeAnswer: sendChallengeAnswerV2,
+    cancel: cancelEmailV2Auth
   } = useEmailAuthV2({
     sessionName: randomName(),
     onSuccess: async ({ wallet }) => {
@@ -312,12 +316,22 @@ function Login() {
         </Box>
       </Box>
 
-      {isEmailConflictModalOpen && (
+      {isEmailConflictModalOpen && emailConflictInfo && (
         <Modal size="small" onClose={() => setIsEmailConflictModalOpen(false)}>
           <EmailConflictWarning
-            onCancel={() => setIsEmailConflictModalOpen(false)}
+            info={emailConflictInfo}
+            onCancel={() => {
+              setIsEmailConflictModalOpen(false)
+              setEmailConflictInfo(undefined)
+              if (emailAuthInProgress) {
+                setCode([])
+                cancelEmailV2Auth()
+                setEmail('')
+              }
+            }}
             onConfirm={async () => {
               setIsEmailConflictModalOpen(false)
+              setEmailConflictInfo(undefined)
               await forceCreateFuncRef.current?.()
             }}
           />

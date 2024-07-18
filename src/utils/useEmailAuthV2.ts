@@ -74,11 +74,19 @@ export function useEmailAuthV2({
     }
   }
 
+  const cancel = () => {
+    setInProgress(false)
+    setLoading(false)
+    setChallenge(undefined)
+    setRespondWithCode(null)
+  }
+
   return {
     inProgress,
     initiateAuth,
     loading,
     error,
-    sendChallengeAnswer: inProgress ? sendChallengeAnswer : undefined
+    sendChallengeAnswer: inProgress ? sendChallengeAnswer : undefined,
+    cancel
   }
 }
