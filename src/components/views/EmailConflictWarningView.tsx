@@ -1,11 +1,37 @@
 import { Box, Button, Text } from '@0xsequence/design-system'
+import { Account, EmailConflictInfo, IdentityType } from '@0xsequence/waas'
+import { accountToName } from './ListAccountsView'
 
-interface PaneProps {
+interface EmailConflictWarningProps {
+  info: EmailConflictInfo
   onCancel: () => void
   onConfirm: () => void
 }
 
-export const EmailConflictWarning = (props: PaneProps) => {
+const accountTypeText = (info: EmailConflictInfo) => {
+  if (info.type === IdentityType.PlayFab) {
+    return 'PlayFab login'
+  }
+
+  if (info.type === IdentityType.Email) {
+    return 'Email login'
+  }
+
+  if (info.type === IdentityType.OIDC) {
+    switch (info.issuer) {
+      case 'https://accounts.google.com':
+        return 'Google login'
+      case 'https://appleid.apple.com':
+        return 'Apple login'
+      default:
+        return 'Unknown account type'
+    }
+  }
+
+  return 'Unknown account type'
+}
+
+export const EmailConflictWarning = (props: EmailConflictWarningProps) => {
   const { onCancel, onConfirm } = props
 
   return (
@@ -17,7 +43,8 @@ export const EmailConflictWarning = (props: PaneProps) => {
       </Box>
       <Box height="full">
         <Text as="div" variant="normal" color="text50" textAlign="center">
-          Another account with this email address already exists. You can cancel this or force create a new account.
+          Another account with this email address <Text color="text80">({props.info.email})</Text> already exists with account
+          type <Text color="text80">({accountTypeText(props.info)})</Text>. You can cancel this or force create a new account.
         </Text>
       </Box>
 
