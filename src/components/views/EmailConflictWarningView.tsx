@@ -1,6 +1,5 @@
 import { Box, Button, Text } from '@0xsequence/design-system'
-import { Account, EmailConflictInfo, IdentityType } from '@0xsequence/waas'
-import { accountToName } from './ListAccountsView'
+import { EmailConflictInfo, IdentityType } from '@0xsequence/waas'
 
 interface EmailConflictWarningProps {
   info: EmailConflictInfo
