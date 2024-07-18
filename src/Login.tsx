@@ -8,15 +8,13 @@ import { router, sequence } from './main'
 import { PINCodeInput } from './components/PINCodeInput'
 import { Logo } from './components/Logo'
 import { EmailConflictWarning } from './components/views/EmailConflictWarningView.tsx'
+import { StytchLogin } from './components/StytchLogin.tsx'
 
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
-import { useSessionHash } from './utils/useSessionHash.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
-import { StytchLogin } from './components/StytchLogin.tsx'
 
 function Login() {
-  const { sessionHash } = useSessionHash()
   const [email, setEmail] = useState('')
   const inputRef = useRef<HTMLInputElement | null>(null)
   const isEmailValid = inputRef.current?.validity.valid
@@ -263,7 +261,7 @@ function Login() {
         <Divider background="buttonGlass" />
 
         <Box paddingY="4" gap="4" flexDirection="column" width="full">
-          {!emailAuthInProgress && !!sessionHash && (
+          {!emailAuthInProgress && (
             <>
               <Box marginBottom="2">
                 <Text variant="large" color="text100" fontWeight="bold">
@@ -273,24 +271,17 @@ function Login() {
               <Box gap="4" flexDirection="column" width="fit">
                 {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
                   <Box>
-                    <GoogleLogin
-                      key={'google-' + sessionHash}
-                      onSuccess={handleGoogleLogin}
-                      shape="circle"
-                      width={230}
-                      nonce={sessionHash}
-                    />
+                    <GoogleLogin key="google" onSuccess={handleGoogleLogin} shape="circle" width={230} />
                   </Box>
                 )}
                 {import.meta.env.VITE_APPLE_CLIENT_ID && (
                   <AppleSignin
-                    key={'apple-' + sessionHash}
+                    key="apple"
                     authOptions={{
                       clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
                       scope: 'openid email',
                       redirectURI: appleRedirectUri,
-                      usePopup: true,
-                      nonce: sessionHash
+                      usePopup: true
                     }}
                     onError={(error: any) => console.error(error)}
                     onSuccess={handleAppleLogin}
