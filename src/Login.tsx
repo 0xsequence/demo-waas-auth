@@ -55,10 +55,10 @@ function Login() {
               console.log('Sequence response:', seqRes)
               router.navigate('/')
             } catch (e) {
-              console.error(e)
+              console.error('Error: ' + JSON.stringify(error))
             }
           } else if (error) {
-            console.log('Error: ' + JSON.stringify(error))
+            console.error('Error: ' + JSON.stringify(error))
           }
         }
       )
@@ -262,61 +262,63 @@ function Login() {
 
         <Divider background="buttonGlass" />
 
-        <Box paddingY="4" gap="4" flexDirection="column" width="fit">
+        <Box paddingY="4" gap="4" flexDirection="column" width="full">
           {!emailAuthInProgress && !!sessionHash && (
             <>
-              <Box marginBottom="4">
+              <Box marginBottom="2">
                 <Text variant="large" color="text100" fontWeight="bold">
                   Social Login
                 </Text>
               </Box>
-              {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-                <Box>
-                  <GoogleLogin
-                    key={'google-' + sessionHash}
-                    onSuccess={handleGoogleLogin}
-                    shape="circle"
-                    width={230}
-                    nonce={sessionHash}
+              <Box gap="4" flexDirection="column" width="fit">
+                {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+                  <Box>
+                    <GoogleLogin
+                      key={'google-' + sessionHash}
+                      onSuccess={handleGoogleLogin}
+                      shape="circle"
+                      width={230}
+                      nonce={sessionHash}
+                    />
+                  </Box>
+                )}
+                {import.meta.env.VITE_APPLE_CLIENT_ID && (
+                  <AppleSignin
+                    key={'apple-' + sessionHash}
+                    authOptions={{
+                      clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
+                      scope: 'openid email',
+                      redirectURI: appleRedirectUri,
+                      usePopup: true,
+                      nonce: sessionHash
+                    }}
+                    onError={(error: any) => console.error(error)}
+                    onSuccess={handleAppleLogin}
+                    uiType="dark"
                   />
+                )}
+              </Box>
+
+              <Divider background="buttonGlass" width="full" />
+
+              {import.meta.env.VITE_PLAYFAB_TITLE_ID && (
+                <Box>
+                  <Box marginBottom="4">
+                    <Text variant="large" color="text100" fontWeight="bold">
+                      Playfab login
+                    </Text>
+                  </Box>
+
+                  <Box>
+                    <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
+                  </Box>
                 </Box>
               )}
-              {import.meta.env.VITE_APPLE_CLIENT_ID && (
-                <AppleSignin
-                  key={'apple-' + sessionHash}
-                  authOptions={{
-                    clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
-                    scope: 'openid email',
-                    redirectURI: appleRedirectUri,
-                    usePopup: true,
-                    nonce: sessionHash
-                  }}
-                  onError={(error: any) => console.error(error)}
-                  onSuccess={handleAppleLogin}
-                  uiType="dark"
-                />
-              )}
+
+              {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && <StytchLogin />}
             </>
           )}
         </Box>
-
-        <Divider background="buttonGlass" />
-
-        {import.meta.env.VITE_PLAYFAB_TITLE_ID && (
-          <Box paddingY="4">
-            <Box marginBottom="4">
-              <Text variant="large" color="text100" fontWeight="bold">
-                Playfab login
-              </Text>
-            </Box>
-
-            <Box>
-              <Button label="Login with Google (through Playfab)" onClick={handleGooglePlayfabLogin} />
-            </Box>
-          </Box>
-        )}
-
-        {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && <StytchLogin />}
       </Box>
 
       {isEmailConflictModalOpen && (
