@@ -1,12 +1,19 @@
-import { useEffect, useState } from 'react'
-import { Box, Text, Button, TextInput, Spinner, Select } from "@0xsequence/design-system"
-import { ethers } from "ethers"
+import { ReactNode, useEffect, useState } from 'react'
+import { Box, Text, Button, TextInput, Spinner, Select } from '@0xsequence/design-system'
+import { ethers } from 'ethers'
 import { sequence } from '../../main'
 import { erc1155, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
+import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
+
+type SelectOption = {
+  className?: string
+  disabled?: boolean
+  label: string | ReactNode
+  value: string
+}
 
 interface TokenEntry {
   tokenId: string
@@ -14,9 +21,9 @@ interface TokenEntry {
 }
 
 export function SendERC1155RowView(props: {
-  index: number,
-  options: GetTokenBalancesReturn | undefined,
-  onChange: (index: number, tokenId: string, value: string) => void,
+  index: number
+  options: GetTokenBalancesReturn | undefined
+  onChange: (index: number, tokenId: string, value: string) => void
   removeTokenEntry: (index: number) => void
 }) {
   const [selectedId, setSelectedId] = useState<string>('')
@@ -36,45 +43,39 @@ export function SendERC1155RowView(props: {
     flex: 1
   }
 
-  return <Box style={rowStyle}>
-    <Box style={fieldStyle}>
-      <Select
-        name={`sendERC1155TokenId${props.index}`}
-        value={selectedId}
-        disabled={!props.options}
-        onValueChange={(value: string) => {
-          setSelectedId(value)
-        }}
-        options={props.options?.balances.map((balance) => ({
-          label: `${balance.tokenMetadata?.name || 'Unknown'} - ${balance.balance}`,
-          value: balance.tokenID
-        })) || []}
-        placeholder='Select a token'
-      />
+  return (
+    <Box style={rowStyle}>
+      <Box style={fieldStyle}>
+        <Select
+          name={`sendERC1155TokenId${props.index}`}
+          value={selectedId}
+          disabled={!props.options}
+          onValueChange={(value: string) => {
+            setSelectedId(value)
+          }}
+          options={
+            (props.options?.balances.map(balance => ({
+              label: `${balance.tokenMetadata?.name || 'Unknown'} - ${balance.balance}`,
+              value: balance.tokenID
+            })) || []) as SelectOption[]
+          }
+          placeholder="Select a token"
+        />
+      </Box>
+      <Box style={fieldStyle}>
+        <TextInput type="text" value={selectedId} onChange={(e: any) => setSelectedId(e.target.value)} placeholder="Token ID" />
+      </Box>
+      <Box style={fieldStyle}>
+        <TextInput type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} placeholder="Amount" />
+      </Box>
+      <Box style={fieldStyle}>
+        <Button label="Remove" onClick={() => props.removeTokenEntry(props.index)} />
+      </Box>
     </Box>
-    <Box style={fieldStyle}>
-      <TextInput
-        type="text"
-        value={selectedId}
-        onChange={(e: any) => setSelectedId(e.target.value)}
-        placeholder="Token ID"
-      />
-    </Box>
-    <Box style={fieldStyle}>
-      <TextInput
-        type="text"
-        value={amount}
-        onChange={(e: any) => setAmount(e.target.value)}
-        placeholder="Amount"
-      />
-    </Box>
-    <Box style={fieldStyle}>
-      <Button label="Remove" onClick={() => props.removeTokenEntry(props.index)} />
-    </Box>
-  </Box>
+  )
 }
 
-export function SendERC1155View(props: {network?: Network}) {
+export function SendERC1155View(props: { network?: Network }) {
   const [tokenAddress, setTokenAddress] = useState<string>('')
   const [tokenEntries, setTokenEntries] = useState<TokenEntry[]>([])
   const [destinationAddress, setDestinationAddress] = useState<string>('')
@@ -107,7 +108,7 @@ export function SendERC1155View(props: {network?: Network}) {
     }
 
     const network = props.network.name
-    const client = new SequenceIndexer("https://" + network+ "-indexer.sequence.app", INDEXER_API_KEY)
+    const client = new SequenceIndexer('https://' + network + '-indexer.sequence.app', INDEXER_API_KEY)
 
     // pass aything you would like
     const contractAddress = tokenAddress
@@ -115,11 +116,13 @@ export function SendERC1155View(props: {network?: Network}) {
     const includeMetadata = true
 
     // Fetch tokens and collectibles owned by any wallet
-    setOptions(await client.getTokenBalances({
-      contractAddress,
-      accountAddress,
-      includeMetadata
-    }))
+    setOptions(
+      await client.getTokenBalances({
+        contractAddress,
+        accountAddress,
+        includeMetadata
+      })
+    )
   }
 
   useEffect(() => {
@@ -140,15 +143,17 @@ export function SendERC1155View(props: {network?: Network}) {
 
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [erc1155({
-        to: destinationAddress,
-        token: tokenAddress,
-        values: tokenEntries.map((entry) => ({
-          id: entry.tokenId,
-          amount: ethers.utils.parseUnits(entry.amount, 0)
-        })),
-      })],
-      network: props.network,
+      transactions: [
+        erc1155({
+          to: destinationAddress,
+          token: tokenAddress,
+          values: tokenEntries.map(entry => ({
+            id: entry.tokenId,
+            amount: ethers.utils.parseUnits(entry.amount, 0)
+          }))
+        })
+      ],
+      network: props.network
     })
 
     if (resp.feeQuote && resp.feeOptions) {
@@ -171,7 +176,7 @@ export function SendERC1155View(props: {network?: Network}) {
       const tx = await sequence.sendERC1155({
         to: destinationAddress,
         token: tokenAddress,
-        values: tokenEntries.map((entry) => ({
+        values: tokenEntries.map(entry => ({
           id: entry.tokenId,
           amount: ethers.utils.parseUnits(entry.amount, 0)
         })),
@@ -233,8 +238,8 @@ export function SendERC1155View(props: {network?: Network}) {
         </Box>
       )}
 
-      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
-      { feeSponsored && (
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption} />
+      {feeSponsored && (
         <Box marginTop="5">
           <Text variant="normal" fontWeight="bold">
             Fee options: Tx Sponsored!
@@ -251,11 +256,7 @@ export function SendERC1155View(props: {network?: Network}) {
             disabled={tokenAddress === '' && destinationAddress === '' && tokenEntries.length !== 0}
             onClick={() => checkFeeOptions()}
           />
-          <Button
-            marginTop="5"
-            label="Send Tokens"
-            onClick={sendTokens}
-          />
+          <Button marginTop="5" label="Send Tokens" onClick={sendTokens} />
         </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
