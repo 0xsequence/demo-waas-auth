@@ -19,23 +19,27 @@ export function EOALinkView(props: {network?: Network, walletAddress?: string}) 
       setSendTransactionError(undefined)
       setInProgress(true)
 
-      const response = await fetch('https://demo-waas-wallet-link-server.tpin.workers.dev/generateNonce', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ walletAddress: props.walletAddress })
-      })
+      console.log(props.walletAddress)
+
+      const response = await fetch(`https://dev-api.sequence.app/rpc/API/GenerateWaaSVerificationURL`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ walletAddress: props.walletAddress })
+      });
       
       const data = await response.json()
-
-      setVerificationLink(data.verificationUrl)
-      setExternalNonce(data.nonce)
 
       const authProof = await sequence.sessionAuthProof({ 
         nonce: data.nonce, 
         network: props.network?.name
       })
+
+      const verificationLink = `${'https://demo-waas-wallet-link.pages.dev/'}?nonce=${data.nonce}&signature=${authProof.data.signature}&sessionId=${authProof.data.sessionId}&chainId=${props.network?.name}`
+
+      setVerificationLink(verificationLink)
+      setExternalNonce(data.nonce)
       
       setAuthProofSessionId(authProof.data.sessionId)
       setAuthProofSignature(authProof.data.signature)
@@ -76,8 +80,8 @@ export function EOALinkView(props: {network?: Network, walletAddress?: string}) 
             Verification Link:
           </Text>
           <br />
-          <a href={`${verificationLink}?nonce=${externalNonce}&signature=${authProofSignature}&sessionId=${authProofSessionId}&chainId=${props.network?.id}`} target="_blank" rel="noopener noreferrer">
-            {verificationLink}?nonce={externalNonce}&signature={authProofSignature}&sessionId={authProofSessionId}&chainId={props.network?.id}
+          <a href={`${verificationLink}`} target="_blank" rel="noopener noreferrer">
+            {verificationLink}
           </a>
         </Box>
       )}
