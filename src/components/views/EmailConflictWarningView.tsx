@@ -17,6 +17,10 @@ const accountTypeText = (info: EmailConflictInfo) => {
   }
 
   if (info.type === IdentityType.OIDC) {
+    if (info.issuer.includes('cognito-idp')) {
+      return 'Email v1 login'
+    }
+
     switch (info.issuer) {
       case 'https://accounts.google.com':
         return 'Google login'

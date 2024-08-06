@@ -35,6 +35,16 @@ export function accountToName(acc: Account) {
     )
   }
 
+  if (acc.type === IdentityType.OIDC) {
+    if (acc.issuer?.includes('cognito-idp')) {
+      return (
+        <Text variant="normal" color="text100">
+          Email v1 ({acc.email})
+        </Text>
+      )
+    }
+  }
+
   switch (acc.issuer) {
     case 'https://accounts.google.com':
       return (
