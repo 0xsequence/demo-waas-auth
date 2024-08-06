@@ -8,7 +8,7 @@ import {
 
 export function EOALinkView(props: {network?: Network, walletAddress?: string}) {
   const [verificationLink, setVerificationLink] = useState<string>()
-  const [externalNonce, _] = useState<string>()
+  const [externalNonce, setExternalNonce] = useState<string>()
   const [inProgress, setInProgress] = useState<boolean>(false)
   const [sendTransactionError, setSendTransactionError] = useState<string>()
 
@@ -37,6 +37,7 @@ export function EOALinkView(props: {network?: Network, walletAddress?: string}) 
       const verificationLink = `${'https://demo-waas-wallet-link.pages.dev/'}?nonce=${data.nonce}&signature=${authProof.data.signature}&sessionId=${authProof.data.sessionId}&chainId=${props.network?.name}`
 
       setVerificationLink(verificationLink)
+      setExternalNonce(data.nonce)
 
       setInProgress(false)
     } catch (e) {
