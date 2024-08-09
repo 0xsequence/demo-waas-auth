@@ -67,6 +67,7 @@ export const networkImages = {
   [networks.AVALANCHE_TESTNET]: 'https://assets.sequence.info/images/networks/small/43113.webp',
   [networks.BASE]: 'https://assets.sequence.info/images/networks/small/8453.webp',
   [networks.BASE_SEPOLIA]: 'https://assets.sequence.info/images/networks/small/84532.webp',
+  [networks.BORNE_TESTNET]: 'https://assets.sequence.info/images/networks/small/94984.webp',
   [networks.BLAST]: 'https://assets.sequence.info/images/networks/small/81457.webp',
   [networks.BLAST_SEPOLIA]: 'https://assets.sequence.info/images/networks/small/168587773.webp',
   [networks.SEPOLIA]: 'https://assets.sequence.info/images/networks/small/11155111.webp',
