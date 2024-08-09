@@ -96,7 +96,14 @@ function Login() {
   const emailAuthInProgress = isEmailV2Enabled ? emailV2AuthInProgress : emailV1AuthInProgress
   const emailAuthLoading = isEmailV2Enabled ? emailV2AuthLoading : emailV1AuthLoading
   const initiateEmailAuth = isEmailV2Enabled ? initiateEmailV2Auth : initiateEmailV1Auth
-  const sendChallengeAnswer = isEmailV2Enabled ? sendChallengeAnswerV2 : sendChallengeAnswerV1
+  const sendChallengeAnswer = async function(code: string) {
+    if (isEmailV2Enabled && sendChallengeAnswerV2) {
+      await sendChallengeAnswerV2(code)
+    } else if (sendChallengeAnswerV1) {
+      await sendChallengeAnswerV1(code)
+    }
+    setCode([])
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -189,7 +196,7 @@ function Login() {
           </Box>
         </Box>
 
-        {sendChallengeAnswer ? (
+        {emailAuthInProgress ? (
           <Box flexDirection="column">
             <Box marginTop="6">
               <Text marginTop="5" variant="normal" color="text80">

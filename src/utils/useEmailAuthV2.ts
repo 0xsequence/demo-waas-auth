@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { sequence } from '../main'
 import { Challenge } from '@0xsequence/waas'
-import { isAccountAlreadyLinkedError } from './error'
+import {isAccountAlreadyLinkedError, isIncorrectAnswerError} from './error'
 import { useToast } from '@0xsequence/design-system'
 
 export function useEmailAuthV2({
@@ -70,7 +70,17 @@ export function useEmailAuthV2({
       return
     }
     if (respondWithCode) {
-      await respondWithCode(answer)
+      try {
+        await respondWithCode(answer)
+      } catch(e) {
+        if (isIncorrectAnswerError(e)) {
+          toast({
+            title: 'Incorrect answer',
+            description: 'The answer is incorrect, please check your email again',
+            variant: 'error',
+          })
+        }
+      }
     }
   }
 
