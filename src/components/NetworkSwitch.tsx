@@ -11,8 +11,6 @@ export function NetworkSwitch({ onNetworkChange }: { onNetworkChange: (network: 
   useEffect(() => {
     sequence.networkList().then((networks: NetworkList) => {
       setNetworkList(networks)
-      console.log(networks)
-
       setNetwork(networks[0])
       onNetworkChange(networks[0])
     })
