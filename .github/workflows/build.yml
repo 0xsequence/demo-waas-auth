@@ -32,6 +32,7 @@ jobs:
           VITE_SEQUENCE_WAAS_CONFIG_KEY_DEV: ${{ secrets.VITE_SEQUENCE_WAAS_CONFIG_KEY_DEV }}
           VITE_SEQUENCE_INDEXER_API_KEY: ${{ secrets.VITE_SEQUENCE_INDEXER_API_KEY }}
           VITE_STYTCH_PUBLIC_TOKEN: ${{ secrets.VITE_STYTCH_PUBLIC_TOKEN }}
+          VITE_STYTCH_LEGACY_ISSUER: ${{ secrets.VITE_STYTCH_LEGACY_ISSUER }}
         run: pnpm build
 
       - name: Push
