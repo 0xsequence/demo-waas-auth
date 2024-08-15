@@ -8,11 +8,12 @@ import { router, sequence } from './main'
 import { PINCodeInput } from './components/PINCodeInput'
 import { Logo } from './components/Logo'
 import { EmailConflictWarning } from './components/views/EmailConflictWarningView.tsx'
-import { StytchLogin } from './components/StytchLogin.tsx'
 
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
+import { StytchLogin } from './components/StytchLogin.tsx'
+import {StytchLegacyLogin} from "./components/StytchLegacyLogin.tsx"
 import { EmailConflictInfo } from '@0xsequence/waas'
 
 function Login() {
@@ -310,7 +311,9 @@ function Login() {
                 </Box>
               )}
 
-              {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && <StytchLogin />}
+              {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && !import.meta.env.VITE_STYTCH_LEGACY_ISSUER && <StytchLogin />}
+
+              {import.meta.env.VITE_STYTCH_PUBLIC_TOKEN && import.meta.env.VITE_STYTCH_LEGACY_ISSUER && <StytchLegacyLogin />}
             </>
           )}
         </Box>
