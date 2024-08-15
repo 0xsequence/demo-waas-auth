@@ -49,7 +49,7 @@ export function accountToName(acc: Account) {
     return <>Stytch account ({acc.email})</>
   }
 
-  if (import.meta.env.STYTCH_LEGACY_ISSUER && acc.issuer === import.meta.env.STYTCH_LEGACY_ISSUER) {
+  if (import.meta.env.VITE_STYTCH_LEGACY_ISSUER && acc.issuer === import.meta.env.VITE_STYTCH_LEGACY_ISSUER) {
     return <>WRAPPED Stytch account ({acc.email}</>
   }
 
