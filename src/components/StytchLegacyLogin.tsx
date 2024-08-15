@@ -12,7 +12,7 @@ enum StytchLoginState {
   SEQUENCE_SIGN_IN,
 }
 
-export function StytchLogin() {
+export function StytchLegacyLogin() {
   const stytchClient = useStytch()
   const { session: stytchSession } = useStytchSession();
   const [state, setState] = useState(StytchLoginState.NONE)
@@ -21,7 +21,7 @@ export function StytchLogin() {
   const stytchInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    if (localStorage.getItem('stytch_auth') !== 'native') {
+    if (localStorage.getItem('stytch_auth') !== 'legacy') {
       return
     }
 
@@ -37,16 +37,21 @@ export function StytchLogin() {
   }, [stytchClient, stytchSession, state]);
 
   useEffect(() => {
-    if (localStorage.getItem('stytch_auth') !== 'native') {
+    if (localStorage.getItem('stytch_auth') !== 'legacy') {
       return
     }
 
     if (stytchSession && state == StytchLoginState.GOT_MAGIC_LINK) {
       setState(StytchLoginState.SEQUENCE_SIGN_IN)
       ;(async () => {
+        console.log("LEGACY STYTCH FLOW")
         const tokens = stytchClient.session.getTokens()!
+        const legacyIssuer = import.meta.env.VITE_STYTCH_LEGACY_ISSUER
+        const res = await fetch(`${legacyIssuer}/authenticate?jwt=${tokens.session_jwt}`, { method: 'POST' })
+        const resJson = await res.json()
+
         const walletAddress = await sequence.signIn({
-          idToken: tokens.session_jwt,
+          idToken: resJson.idToken,
         }, randomName())
 
         console.log(`Wallet address: ${walletAddress}`)
@@ -62,7 +67,7 @@ export function StytchLogin() {
   }, [stytchSession, stytchClient, state]);
 
   const initiateStytchEmailAuth = async (email: string) => {
-    localStorage.setItem('stytch_auth', 'native')
+    localStorage.setItem('stytch_auth', 'legacy')
     setState(StytchLoginState.AUTH_INITIATED)
     await stytchClient.magicLinks.email.loginOrCreate(email, {})
   }
@@ -71,7 +76,7 @@ export function StytchLogin() {
     <Box>
       <Box marginBottom="4">
         <Text variant="large" color="text100" fontWeight="bold">
-          Stytch login
+          Stytch login (LEGACY)
         </Text>
       </Box>
 
