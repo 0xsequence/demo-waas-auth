@@ -14,7 +14,7 @@ export function accountToName(acc: Account) {
   if (acc.type === IdentityType.Email) {
     return (
       <Text variant="normal" color="text100">
-        ({acc.email})
+        Email ({acc.email})
       </Text>
     )
   }
@@ -30,7 +30,7 @@ export function accountToName(acc: Account) {
   if (acc.type === IdentityType.PlayFab) {
     return (
       <Text variant="normal" color="text100">
-        ({acc.email})
+        PlayFab ({acc.email})
       </Text>
     )
   }
@@ -39,7 +39,7 @@ export function accountToName(acc: Account) {
     if (acc.issuer?.includes('cognito-idp')) {
       return (
         <Text variant="normal" color="text100">
-          Email v1 ({acc.email})
+          Email Legacy ({acc.email})
         </Text>
       )
     }
