@@ -74,7 +74,6 @@ Example:
 https://0xsequence.github.io/demo-waas-auth/?extendedConfig=ewogICJycGNTZXJ2ZXIiOiAiaHR0cDovL2xvY2FsaG9zdDo5MTIzIiwKICAia21zUmVnaW9uIjogInVzLWVhc3QtMiIsCiAgImlkcFJlZ2lvbiI6ICJ1cy1lYXN0LTIiLAogICJrZXlJZCI6ICJhcm46YXdzOmttczp1cy1lYXN0LTE6MDAwMDAwMDAwMDAwOmtleS9hZWI5OWUwZi05ZTg5LTQ0ZGUtYTA4NC1lMTgxN2FmNDc3NzgiLAogICJlbWFpbFJlZ2lvbiI6ICJ1cy1lYXN0LTIiLAogICJlbmRwb2ludCI6ICJodHRwOi8vbG9jYWxzdGFjazo0NTY2Igp9
 ```
 
-
 ## Documentation
 Access detailed information about Sequence WaaS in the [Sequence WaaS Documentation](https://docs.sequence.xyz/waas/waas-auth/getting-started). Note that this documentation is subject to change and currently available only through this link.
 
