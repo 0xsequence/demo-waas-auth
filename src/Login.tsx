@@ -13,7 +13,7 @@ import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
 import { StytchLogin } from './components/StytchLogin.tsx'
-import {StytchLegacyLogin} from "./components/StytchLegacyLogin.tsx"
+import { StytchLegacyLogin } from './components/StytchLegacyLogin.tsx'
 import { EmailConflictInfo } from '@0xsequence/waas'
 
 function Login() {

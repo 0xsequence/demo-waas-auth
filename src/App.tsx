@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Text, Divider, Button, Spinner, Modal, Collapsible } from '@0xsequence/design-system'
+import { Box, Text, Divider, Button, Spinner, Modal, Collapsible, ExternalLinkIcon } from '@0xsequence/design-system'
 
 import { router, sequence } from './main'
 
@@ -13,7 +13,6 @@ import { AnimatePresence } from 'framer-motion'
 import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
-import { EOALinkView } from './components/views/EOALinkView'
 import { NetworkSwitch } from './components/NetworkSwitch.tsx'
 import { accountToName, ListAccountsView } from './components/views/ListAccountsView.tsx'
 import { Account, IdentityType, Network } from '@0xsequence/waas'
@@ -40,7 +39,7 @@ function App() {
         setFetchWalletAddressError(e.message)
       })
 
-    sequence.listAccounts().then((response) => {
+    sequence.listAccounts().then(response => {
       if (response.currentAccountId) {
         setCurrentAccount(response.accounts.find(account => account.id === response.currentAccountId))
       }
@@ -189,9 +188,18 @@ function App() {
           <Divider background="buttonGlass" />
           <CallContractsView network={network} />
         </Collapsible>
-        <Collapsible marginY={'3'} label="EOA Link">
-          <Divider background="buttonGlass" />
-          <EOALinkView network={network} walletAddress={walletAddress} />
+        <Collapsible marginY={'3'} label="External Wallet Linking Demo">
+          <Text
+            as="a"
+            variant="medium"
+            color="text100"
+            href="https://demo-waas-wallet-link.pages.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Go to demo
+            <ExternalLinkIcon position="relative" top="1" marginLeft="1" />
+          </Text>
         </Collapsible>
         <ListAccountsView />
       </Box>
