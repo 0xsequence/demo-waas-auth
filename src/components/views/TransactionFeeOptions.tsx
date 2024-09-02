@@ -1,25 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
-import { Box, Select, Text } from "@0xsequence/design-system";
-import { ethers } from "ethers";
+import { Box, Select, Text } from '@0xsequence/design-system'
+import { ethers } from 'ethers'
 
-import { FeeOption, Network, Transaction } from "@0xsequence/waas"
-import { sequence } from "../../main.tsx";
+import { FeeOption, Network, Transaction } from '@0xsequence/waas'
+import { sequence } from '../../main.tsx'
 
-export async function checkTransactionFeeOptions({transactions, network}: {transactions: Transaction[], network?: Network}): Promise<{feeQuote: string | undefined, feeOptions: FeeOption[] | undefined, isSponsored: boolean}> {
+export async function checkTransactionFeeOptions({
+  transactions,
+  network
+}: {
+  transactions: Transaction[]
+  network?: Network
+}): Promise<{ feeQuote: string | undefined; feeOptions: FeeOption[] | undefined; isSponsored: boolean }> {
   const resp = await sequence.feeOptions({
     transactions: transactions,
-    network: network?.id,
+    network: network?.id
   })
 
   if (resp.data.feeQuote && resp.data.feeOptions) {
-    return {feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: false}
+    return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: false }
   }
-  return {feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: true}
+  return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: true }
 }
 
-export function TransactionFeeOptions(props: {feeOptions: FeeOption[] | undefined, onSelected: (feeOption: FeeOption) => void}) {
-  const {feeOptions, onSelected} = props
+export function TransactionFeeOptions(props: {
+  feeOptions: FeeOption[] | undefined
+  onSelected: (feeOption: FeeOption) => void
+}) {
+  const { feeOptions, onSelected } = props
   const [feeOption, setFeeOption] = useState<FeeOption>()
 
   useEffect(() => {
@@ -27,7 +36,7 @@ export function TransactionFeeOptions(props: {feeOptions: FeeOption[] | undefine
       setFeeOption(feeOptions[0])
       onSelected(feeOptions[0])
     }
-  }, [feeOptions]);
+  }, [feeOptions])
 
   useEffect(() => {
     if (feeOption) {
@@ -35,7 +44,8 @@ export function TransactionFeeOptions(props: {feeOptions: FeeOption[] | undefine
     }
   }, [feeOption])
 
-  return feeOptions ? (<Box marginTop="5">
+  return feeOptions ? (
+    <Box marginTop="5">
       <Text variant="normal" fontWeight="bold">
         Fee options:
       </Text>
@@ -54,12 +64,17 @@ export function TransactionFeeOptions(props: {feeOptions: FeeOption[] | undefine
           ...feeOptions.map(option => ({
             label: (
               <Box alignItems="center" gap="2">
-                <Text>{option?.token?.name} {ethers.utils.formatUnits(option?.value, option?.token?.decimals)}</Text>
+                <Text>
+                  {option?.token?.name} {ethers.formatUnits(option?.value, option?.token?.decimals)}
+                </Text>
               </Box>
             ),
             value: String(option?.token?.name)
           }))
         ]}
       />
-    </Box>) : <Box></Box>
+    </Box>
+  ) : (
+    <Box></Box>
+  )
 }

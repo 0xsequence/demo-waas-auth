@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { sequence } from '../../main'
 import { FeeOption, isSentTransactionResponse, Network, erc20 } from '@0xsequence/waas'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { findSupportedNetwork } from '@0xsequence/network'
 
 interface TokenOption {
   label: string
@@ -34,19 +35,30 @@ export function SendERC20View(props: { network?: Network }) {
   const [feeQuote, setFeeQuote] = useState<string>()
   const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
 
+  const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
+
+  useEffect(() => {
+    if (props.network) {
+      const networkConfig = findSupportedNetwork(props.network.name)
+      if (networkConfig?.blockExplorer?.rootUrl) {
+        setBlockExplorerURL(networkConfig.blockExplorer?.rootUrl)
+      }
+    }
+  }, [props.network])
+
   useEffect(() => {
     fetchTokenBalance(customTokenAddress)
   }, [customTokenAddress])
 
   const fetchTokenBalance = async (tokenAddress: string) => {
-    if (!ethers.utils.isAddress(tokenAddress)) {
+    if (!ethers.isAddress(tokenAddress)) {
       setTokenBalance('---')
       return
     }
 
     setTokenBalance('...')
 
-    const node = new ethers.providers.JsonRpcProvider(`https://nodes.sequence.app/${props.network?.name}`)
+    const node = new ethers.JsonRpcProvider(`https://nodes.sequence.app/${props.network?.name}`)
     const contract = new ethers.Contract(
       tokenAddress,
       [
@@ -65,7 +77,7 @@ export function SendERC20View(props: { network?: Network }) {
       ])
 
       setDecimals(decimals)
-      setTokenBalance(`${ethers.utils.formatUnits(balance, decimals)} ${symbol}`)
+      setTokenBalance(`${ethers.formatUnits(balance, decimals)} ${symbol}`)
     } catch (e) {
       setTokenBalance('---')
     }
@@ -77,7 +89,7 @@ export function SendERC20View(props: { network?: Network }) {
         erc20({
           token: customTokenAddress,
           to: destinationAddress,
-          value: ethers.utils.parseUnits(amount, decimals).toString()
+          value: ethers.parseUnits(amount, decimals).toString()
         })
       ],
       network: props.network
@@ -103,7 +115,7 @@ export function SendERC20View(props: { network?: Network }) {
       const tx = await sequence.sendERC20({
         token: customTokenAddress,
         to: destinationAddress,
-        value: ethers.utils.parseUnits(amount, decimals),
+        value: ethers.parseUnits(amount, decimals),
         network: props.network?.id,
         transactionsFeeOption: feeOption,
         transactionsFeeQuote: feeQuote
@@ -148,7 +160,9 @@ export function SendERC20View(props: { network?: Network }) {
       </Box>
 
       <Box marginTop="3">
-        <Text variant="normal" color="text100">Token Balance: {tokenBalance}</Text>
+        <Text variant="normal" color="text100">
+          Token Balance: {tokenBalance}
+        </Text>
         <Button marginLeft="2" size="xs" label="Fetch" onClick={() => fetchTokenBalance(customTokenAddress)} />
       </Box>
 
@@ -202,7 +216,7 @@ export function SendERC20View(props: { network?: Network }) {
           <Text variant="normal" color="text100" fontWeight="bold">
             Transaction Hash:
           </Text>
-          <a href={`https://polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
+          <a href={`${blockExplorerURL}tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
             {transactionHash}
           </a>
         </Box>
