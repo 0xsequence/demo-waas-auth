@@ -1,16 +1,16 @@
-import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
-import { ethers } from "ethers"
-import { SetStateAction, useEffect, useState } from "react"
-import { sequence } from "../../main"
-import { isSentTransactionResponse, Network, FeeOption } from "@0xsequence/waas"
+import { Box, Text, Button, TextInput, Spinner } from '@0xsequence/design-system'
+import { ethers } from 'ethers'
+import { SetStateAction, useEffect, useState } from 'react'
+import { sequence } from '../../main'
+import { isSentTransactionResponse, Network, FeeOption } from '@0xsequence/waas'
 import { GetEtherBalanceArgs, SequenceIndexer } from '@0xsequence/indexer'
 import { findSupportedNetwork, indexerURL } from '@0xsequence/network'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
+import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
-export function SendTransactionsView(props: {network?: Network}) {
-  const [nativeTokenBalance, setNativeTokenBalance] = useState<ethers.BigNumber>()
+export function SendTransactionsView(props: { network?: Network }) {
+  const [nativeTokenBalance, setNativeTokenBalance] = useState<bigint>()
   const [nativeTokenName, setNativeTokenName] = useState<string>('ETH')
 
   const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
@@ -36,7 +36,7 @@ export function SendTransactionsView(props: {network?: Network}) {
 
       if (networkConfig) {
         // Hack to set the native token name, should ideally come from networkConfig.nativeTokenName
-        const tokenName = networkConfig.name in {'polygon': 1, 'mumbai': 1} ? 'MATIC' : 'ETH'
+        const tokenName = networkConfig.name in { polygon: 1, mumbai: 1 } ? 'MATIC' : 'ETH'
         setNativeTokenName(tokenName)
         fetchNativeTokenBalance()
 
@@ -62,27 +62,30 @@ export function SendTransactionsView(props: {network?: Network}) {
     const client = new SequenceIndexer(indexerURL(networkConfig.name), INDEXER_API_KEY)
     const res = await client.getEtherBalance({ accountAddress: address } as GetEtherBalanceArgs)
 
-    setNativeTokenBalance(ethers.BigNumber.from(res.balance.balanceWei))
+    setNativeTokenBalance(BigInt(res.balance.balanceWei))
   }
 
   const checkFeeOptions = async (to: string, amount: string) => {
-      const resp = await checkTransactionFeeOptions({
-        transactions: [{
-          to, value: ethers.utils.parseEther(amount),
-        }],
-        network: props.network
-      })
+    const resp = await checkTransactionFeeOptions({
+      transactions: [
+        {
+          to,
+          value: ethers.parseEther(amount)
+        }
+      ],
+      network: props.network
+    })
 
-      if (resp.feeQuote && resp.feeOptions) {
-        setFeeOptions(resp.feeOptions)
-        setFeeQuote(resp.feeQuote)
+    if (resp.feeQuote && resp.feeOptions) {
+      setFeeOptions(resp.feeOptions)
+      setFeeQuote(resp.feeQuote)
 
-        console.log('feeOptions', resp)
-        return
-      }
+      console.log('feeOptions', resp)
+      return
+    }
 
-      setFeeSponsored(true)
-      console.log('tx sponsored')
+    setFeeSponsored(true)
+    console.log('tx sponsored')
   }
 
   const sendNativeToken = async (to: string, amount: string) => {
@@ -91,9 +94,12 @@ export function SendTransactionsView(props: {network?: Network}) {
 
       setIsNativeTokenSendTxInProgress(true)
       const tx = await sequence.sendTransaction({
-        transactions: [{
-          to, value: ethers.utils.parseEther(amount),
-        }],
+        transactions: [
+          {
+            to,
+            value: ethers.parseEther(amount)
+          }
+        ],
         network: props.network?.id,
         transactionsFeeOption: feeOption,
         transactionsFeeQuote: feeQuote
@@ -120,7 +126,7 @@ export function SendTransactionsView(props: {network?: Network}) {
   return (
     <Box>
       <Text variant="normal" color="text100" fontWeight="bold">
-        Native token balance: {ethers.utils.formatEther(nativeTokenBalance || 0)} {nativeTokenName}
+        Native token balance: {ethers.formatEther(nativeTokenBalance || 0)} {nativeTokenName}
       </Text>
       <Button marginLeft="2" size="xs" label="Fetch" onClick={fetchNativeTokenBalance} />
       <Box marginTop="5">
@@ -149,13 +155,9 @@ export function SendTransactionsView(props: {network?: Network}) {
           data-id="nativeTokenSendAmount"
         />
       </Box>
-      {sendTransactionError && (
-        <Box marginTop="3">
-          Transaction failed: {sendTransactionError}
-        </Box>
-      )}
-      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
-      { feeSponsored && (
+      {sendTransactionError && <Box marginTop="3">Transaction failed: {sendTransactionError}</Box>}
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption} />
+      {feeSponsored && (
         <Box marginTop="5">
           <Text variant="normal" fontWeight="bold">
             Fee options: Tx Sponsored!
@@ -163,21 +165,21 @@ export function SendTransactionsView(props: {network?: Network}) {
         </Box>
       )}
       {!isNativeTokenSendTxInProgress ? (
-          <Box>
-            <Button
-              marginTop="5"
-              marginRight="2"
-              label="Check fee options"
-              disabled={nativeTokenSendAddress === '' && nativeTokenSendAmount === ''}
-              onClick={() => checkFeeOptions(nativeTokenSendAddress, nativeTokenSendAmount)}
-            />
-            <Button
-              marginTop="5"
-              label="Send native token"
-              disabled={nativeTokenSendAddress === '' && nativeTokenSendAmount === ''}
-              onClick={() => sendNativeToken(nativeTokenSendAddress, nativeTokenSendAmount)}
-            />
-          </Box>
+        <Box>
+          <Button
+            marginTop="5"
+            marginRight="2"
+            label="Check fee options"
+            disabled={nativeTokenSendAddress === '' && nativeTokenSendAmount === ''}
+            onClick={() => checkFeeOptions(nativeTokenSendAddress, nativeTokenSendAmount)}
+          />
+          <Button
+            marginTop="5"
+            label="Send native token"
+            disabled={nativeTokenSendAddress === '' && nativeTokenSendAmount === ''}
+            onClick={() => sendNativeToken(nativeTokenSendAddress, nativeTokenSendAmount)}
+          />
+        </Box>
       ) : (
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
           <Spinner />

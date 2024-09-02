@@ -5,6 +5,7 @@ import { sequence } from '../../main'
 import { erc1155, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { findSupportedNetwork } from '@0xsequence/network'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
@@ -89,6 +90,17 @@ export function SendERC1155View(props: { network?: Network }) {
   const [feeQuote, setFeeQuote] = useState<string>()
   const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
 
+  const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
+
+  useEffect(() => {
+    if (props.network) {
+      const networkConfig = findSupportedNetwork(props.network.name)
+      if (networkConfig?.blockExplorer?.rootUrl) {
+        setBlockExplorerURL(networkConfig.blockExplorer?.rootUrl)
+      }
+    }
+  }, [props.network])
+
   const addTokenEntry = () => {
     setTokenEntries([...tokenEntries, { tokenId: '', amount: '' }])
   }
@@ -149,7 +161,7 @@ export function SendERC1155View(props: { network?: Network }) {
           token: tokenAddress,
           values: tokenEntries.map(entry => ({
             id: entry.tokenId,
-            amount: ethers.utils.parseUnits(entry.amount, 0)
+            amount: ethers.parseUnits(entry.amount, 0)
           }))
         })
       ],
@@ -178,7 +190,7 @@ export function SendERC1155View(props: { network?: Network }) {
         token: tokenAddress,
         values: tokenEntries.map(entry => ({
           id: entry.tokenId,
-          amount: ethers.utils.parseUnits(entry.amount, 0)
+          amount: ethers.parseUnits(entry.amount, 0)
         })),
         network: props.network?.id,
         transactionsFeeOption: feeOption,
@@ -269,7 +281,7 @@ export function SendERC1155View(props: { network?: Network }) {
           <Text variant="normal" color="text100" fontWeight="bold">
             Transaction Hash:
           </Text>
-          <a href={`https://polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
+          <a href={`${blockExplorerURL}tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
             {transactionHash}
           </a>
         </Box>

@@ -19,7 +19,7 @@ const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
 const SEQUENCE_PROJECT_ACCESS_KEY_DEV = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY_DEV
 const SEQUENCE_WAAS_CONFIG_KEY_DEV = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY_DEV
 
-export const node = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
+export const node = new ethers.JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 const urlParams = new URLSearchParams(window.location.search)
 const targetEnv = urlParams.get('env') ?? 'prod'

@@ -1,16 +1,11 @@
+import { Box, Text, Button, TextInput, Spinner } from '@0xsequence/design-system'
+import { SetStateAction, useEffect, useState } from 'react'
+import { sequence } from '../../main'
+import { delayedEncode, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
+import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { findSupportedNetwork } from '@0xsequence/network'
 
-import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
-import { SetStateAction, useState } from "react"
-import { sequence } from "../../main"
-import {
-  delayedEncode,
-  FeeOption,
-  isSentTransactionResponse,
-  Network,
-} from "@0xsequence/waas"
-import { checkTransactionFeeOptions, TransactionFeeOptions } from "./TransactionFeeOptions.tsx";
-
-export function CallContractsView(props: {network?: Network}) {
+export function CallContractsView(props: { network?: Network }) {
   const [contractAddress, setContractAddress] = useState<string>('')
   const [contractAbi, setContractAbi] = useState<string>('')
   const [contractMethod, setContractMethod] = useState<string>('')
@@ -24,15 +19,28 @@ export function CallContractsView(props: {network?: Network}) {
   const [feeQuote, setFeeQuote] = useState<string>()
   const [feeSponsored, setFeeSponsored] = useState<boolean>(false)
 
+  const [blockExplorerURL, setBlockExplorerURL] = useState<string>('')
+
+  useEffect(() => {
+    if (props.network) {
+      const networkConfig = findSupportedNetwork(props.network.name)
+      if (networkConfig?.blockExplorer?.rootUrl) {
+        setBlockExplorerURL(networkConfig.blockExplorer?.rootUrl)
+      }
+    }
+  }, [props.network])
+
   const checkFeeOptions = async () => {
     const resp = await checkTransactionFeeOptions({
-      transactions: [delayedEncode({
-        to: contractAddress,
-        abi: contractAbi,
-        func: contractMethod,
-        args: JSON.parse(contractMethodArgs),
-        value: "0"
-      })],
+      transactions: [
+        delayedEncode({
+          to: contractAddress,
+          abi: contractAbi,
+          func: contractMethod,
+          args: JSON.parse(contractMethodArgs),
+          value: '0'
+        })
+      ],
       network: props.network
     })
 
@@ -132,8 +140,8 @@ export function CallContractsView(props: {network?: Network}) {
         />
       </Box>
 
-      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption}/>
-      { feeSponsored && (
+      <TransactionFeeOptions feeOptions={feeOptions} onSelected={setFeeOption} />
+      {feeSponsored && (
         <Box marginTop="5">
           <Text variant="normal" fontWeight="bold">
             Fee options: Tx Sponsored!
@@ -141,35 +149,21 @@ export function CallContractsView(props: {network?: Network}) {
         </Box>
       )}
 
-      {sendTransactionError && (
-        <Box marginTop="3">
-          Transaction failed: {sendTransactionError}
-        </Box>
-      )}
+      {sendTransactionError && <Box marginTop="3">Transaction failed: {sendTransactionError}</Box>}
       {!inProgress ? (
         <Box>
           <Button
             marginTop="5"
             marginRight="2"
             label="Check fee options"
-            disabled={
-              contractAddress === '' &&
-              contractAbi === '' &&
-              contractMethod === '' &&
-              contractMethodArgs === ''
-            }
+            disabled={contractAddress === '' && contractAbi === '' && contractMethod === '' && contractMethodArgs === ''}
             onClick={() => checkFeeOptions()}
           />
           <Button
             marginTop="5"
             label="Call contract"
-            disabled={
-              contractAddress === '' &&
-              contractAbi === '' &&
-              contractMethod === '' &&
-              contractMethodArgs === ''
-            }
-            onClick={() => callContract() }
+            disabled={contractAddress === '' && contractAbi === '' && contractMethod === '' && contractMethodArgs === ''}
+            onClick={() => callContract()}
           />
         </Box>
       ) : (
@@ -183,7 +177,7 @@ export function CallContractsView(props: {network?: Network}) {
             Send native token transaction hash:
           </Text>
           <br />
-          <a href={`https://polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
+          <a href={`${blockExplorerURL}tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
             {transactionHash}
           </a>
         </Box>
