@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@0xsequence/design-system": "1.7.6",
-    "@0xsequence/indexer": "0.0.0-20240903183150",
-    "@0xsequence/network": "0.0.0-20240903183150",
-    "@0xsequence/waas": "0.0.0-20240903183150",
+    "@0xsequence/indexer": "2.0.1",
+    "@0xsequence/network": "2.0.1",
+    "@0xsequence/waas": "2.0.1",
     "@react-oauth/google": "^0.11.1",
     "@stytch/react": "^18.1.0",
     "@stytch/vanilla-js": "^4.13.2",
