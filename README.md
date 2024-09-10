@@ -8,6 +8,7 @@ Sequence WaaS simplifies wallet functionalities for users and devs, eliminating 
 
 ### Installation
 Install the project dependencies with:
+
 ```
 pnpm install
 ```
