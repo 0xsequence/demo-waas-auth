@@ -1,49 +1,92 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { sequence } from '../main'
+import { Challenge } from '@0xsequence/waas'
+import { isAccountAlreadyLinkedError } from './error'
+import { useToast } from '@0xsequence/design-system'
 
-export function useEmailAuth({ onSuccess }: { onSuccess: (idToken: string) => void }) {
-  const [email, setEmail] = useState('')
+export function useEmailAuth({
+  onSuccess,
+  sessionName,
+  linkAccount = false
+}: {
+  onSuccess: (res: { wallet: string; sessionId: string }) => void
+  sessionName: string
+  linkAccount?: boolean
+}) {
+  const toast = useToast()
+
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
-  const [instance, setInstance] = useState('')
+  const [inProgress, setInProgress] = useState(false)
+  const [respondWithCode, setRespondWithCode] = useState<((code: string) => Promise<void>) | null>()
+
+  const [challenge, setChallenge] = useState<Challenge | undefined>()
+
+  useEffect(() => {
+    return sequence.onEmailAuthCodeRequired(async respondWithCode => {
+      setLoading(false)
+      setRespondWithCode(() => respondWithCode)
+    })
+  }, [sequence, setLoading, setRespondWithCode])
 
   const initiateAuth = async (email: string) => {
     setLoading(true)
-
+    setInProgress(true)
     try {
-      const { instance } = await sequence.email.initiateAuth({ email })
-      setInstance(instance)
-      setEmail(email)
+      if (linkAccount) {
+        const challenge = await sequence.initAuth({ email })
+        setChallenge(challenge)
+        setLoading(false)
+      } else {
+        const res = await sequence.signIn({ email }, sessionName)
+        onSuccess(res)
+      }
     } catch (e: any) {
-      console.error(e)
       setError(e.message || 'Unknown error')
     } finally {
-      setLoading(false)
+      if (!linkAccount) {
+        setLoading(false)
+        setInProgress(false)
+      }
     }
   }
 
   const sendChallengeAnswer = async (answer: string) => {
-    setLoading(true)
-
-    try {
-      const sessionHash = await sequence.getSessionHash()
-      const identity = await sequence.email.finalizeAuth({ instance, answer, email, sessionHash })
-      if (!('idToken' in identity)) {
-        throw new Error('invalid identity returned by finalizeAuth')
+    if (linkAccount && challenge) {
+      //completeAuth(challenge.withAnswer(answer), { sessionName })
+      try {
+        await sequence.linkAccount(challenge.withAnswer(answer))
+      } catch (e) {
+        if (isAccountAlreadyLinkedError(e)) {
+          toast({
+            title: 'Account already linked',
+            description: 'This account is already linked to another wallet',
+            variant: 'error'
+          })
+        }
       }
-      onSuccess(identity.idToken)
-    } catch (e: any) {
-      setError(e.message || 'Unknown error')
-    } finally {
       setLoading(false)
+      setInProgress(false)
+      return
+    }
+    if (respondWithCode) {
+      await respondWithCode(answer)
     }
   }
 
+  const cancel = () => {
+    setInProgress(false)
+    setLoading(false)
+    setChallenge(undefined)
+    setRespondWithCode(null)
+  }
+
   return {
-    inProgress: loading || !!instance,
+    inProgress,
+    initiateAuth,
     loading,
     error,
-    initiateAuth,
-    sendChallengeAnswer: instance ? sendChallengeAnswer : undefined
+    sendChallengeAnswer: inProgress ? sendChallengeAnswer : undefined,
+    cancel
   }
 }
