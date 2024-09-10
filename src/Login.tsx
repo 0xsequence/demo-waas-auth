@@ -1,4 +1,4 @@
-import { Box, Text, TextInput, Button, Spinner, Checkbox, Divider, Modal, Switch } from '@0xsequence/design-system'
+import { Box, Text, TextInput, Button, Spinner, Divider, Modal, Switch } from '@0xsequence/design-system'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
 import AppleSignin from 'react-apple-signin-auth'
@@ -11,7 +11,6 @@ import { EmailConflictWarning } from './components/views/EmailConflictWarningVie
 
 import { randomName } from './utils/indexer'
 import { useEmailAuth } from './utils/useEmailAuth.ts'
-import { useEmailAuthV2 } from './utils/useEmailAuthV2.ts'
 import { StytchLogin } from './components/StytchLogin.tsx'
 import { StytchLegacyLogin } from './components/StytchLegacyLogin.tsx'
 import { EmailConflictInfo } from '@0xsequence/waas'
@@ -22,8 +21,6 @@ function Login() {
   const isEmailValid = inputRef.current?.validity.valid
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
-
-  const [isEmailV2Enabled, setIsEmailV2Enabled] = useState(true)
 
   const [emailConflictInfo, setEmailConflictInfo] = useState<EmailConflictInfo | undefined>()
   const [isEmailConflictModalOpen, setIsEmailConflictModalOpen] = useState(false)
@@ -68,36 +65,18 @@ function Login() {
   })
 
   const {
-    inProgress: emailV2AuthInProgress,
-    loading: emailV2AuthLoading,
-    initiateAuth: initiateEmailV2Auth,
-    sendChallengeAnswer: sendChallengeAnswerV2,
-    cancel: cancelEmailV2Auth
-  } = useEmailAuthV2({
+    inProgress: emailAuthInProgress,
+    loading: emailAuthLoading,
+    initiateAuth: initiateEmailAuth,
+    sendChallengeAnswer,
+    cancel: cancelEmailAuth
+  } = useEmailAuth({
     sessionName: randomName(),
     onSuccess: async ({ wallet }) => {
       console.log(`Wallet address: ${wallet}`)
       router.navigate('/')
     }
   })
-
-  const {
-    inProgress: emailV1AuthInProgress,
-    loading: emailV1AuthLoading,
-    initiateAuth: initiateEmailV1Auth,
-    sendChallengeAnswer: sendChallengeAnswerV1
-  } = useEmailAuth({
-    onSuccess: async idToken => {
-      const walletAddress = await sequence.signIn({ idToken }, randomName())
-      console.log(`Wallet address: ${walletAddress}`)
-      router.navigate('/')
-    }
-  })
-
-  const emailAuthInProgress = isEmailV2Enabled ? emailV2AuthInProgress : emailV1AuthInProgress
-  const emailAuthLoading = isEmailV2Enabled ? emailV2AuthLoading : emailV1AuthLoading
-  const initiateEmailAuth = isEmailV2Enabled ? initiateEmailV2Auth : initiateEmailV1Auth
-  const sendChallengeAnswer = isEmailV2Enabled ? sendChallengeAnswerV2 : sendChallengeAnswerV1
 
   useEffect(() => {
     ;(async () => {
@@ -168,8 +147,14 @@ function Login() {
           </Box>
         </Box>
 
+        <Box marginTop="6" marginBottom="4">
+          <Text variant="large" color="text100" fontWeight="bold">
+            Guest Login
+          </Text>
+        </Box>
+
         <Box gap="4">
-          <Button label="Guest login" onClick={handleGuestLogin} />
+          <Button label="Login as guest" onClick={handleGuestLogin} />
         </Box>
 
         <Divider background="buttonGlass" />
@@ -178,16 +163,6 @@ function Login() {
           <Text variant="large" color="text100" fontWeight="bold">
             Email Login
           </Text>
-
-          <Box marginTop="4">
-            <Checkbox
-              label="Use v2 email login"
-              checked={isEmailV2Enabled}
-              onCheckedChange={() => {
-                setIsEmailV2Enabled(!isEmailV2Enabled)
-              }}
-            />
-          </Box>
         </Box>
 
         {sendChallengeAnswer ? (
@@ -328,7 +303,7 @@ function Login() {
               setEmailConflictInfo(undefined)
               if (emailAuthInProgress) {
                 setCode([])
-                cancelEmailV2Auth()
+                cancelEmailAuth()
                 setEmail('')
               }
             }}

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Divider, PINCodeInput, Spinner, Text, TextInput, useToast } from '@0xsequence/design-system'
+import { Box, Button, Divider, PINCodeInput, Spinner, Text, TextInput, useToast } from '@0xsequence/design-system'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { Account, IdentityType } from '@0xsequence/waas'
 import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google'
@@ -6,7 +6,7 @@ import AppleSignin from 'react-apple-signin-auth'
 
 import { sequence } from '../../main'
 
-import { useEmailAuthV2 } from '../../utils/useEmailAuthV2'
+import { useEmailAuth } from '../../utils/useEmailAuth'
 import { randomName } from '../../utils/indexer'
 import { isAccountAlreadyLinkedError } from '../../utils/error'
 
@@ -98,14 +98,12 @@ export function ListAccountsView() {
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
 
-  const [v2EmailLoginEnabled, setV2EmailLoginEnabled] = useState(true)
-
   const {
     inProgress: emailAuthInProgress,
     loading: emailAuthLoading,
     initiateAuth: initiateEmailAuth,
     sendChallengeAnswer
-  } = useEmailAuthV2({
+  } = useEmailAuth({
     sessionName: randomName(),
     onSuccess: async ({ wallet }) => {
       console.log(`Wallet address: ${wallet}`)
@@ -291,15 +289,6 @@ export function ListAccountsView() {
           <Text variant="normal" color="text100" fontWeight="bold">
             Email
           </Text>
-
-          <Box marginTop="4">
-            <Checkbox
-              label="Use v2 email login"
-              disabled
-              checked={v2EmailLoginEnabled}
-              onChange={() => setV2EmailLoginEnabled(!v2EmailLoginEnabled)}
-            />
-          </Box>
         </Box>
 
         {sendChallengeAnswer ? (
