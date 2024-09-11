@@ -78,8 +78,7 @@ https://0xsequence.github.io/demo-waas-auth/?extendedConfig=ewogICJycGNTZXJ2ZXIi
 ## Documentation
 Access detailed information about Sequence WaaS in the [Sequence WaaS Documentation](https://docs.sequence.xyz/waas/waas-auth/getting-started). Note that this documentation is subject to change and currently available only through this link.
 
-## Current Limitations
-- The demo currently supports only social logins for transaction activities. The email login is present but does not support transaction functionalities at this stage.
+## Limitations
 - Sign in with Apple requires running the server in host mode at port 443. The app must then be accessed from a domain that's not localhost, e.g. https://localhost.direct.
 
 ---
