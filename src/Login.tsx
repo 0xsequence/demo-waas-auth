@@ -79,11 +79,11 @@ function Login() {
   })
 
   useEffect(() => {
-    ;(async () => {
-      if (await sequence.isSignedIn()) {
-        router.navigate('/')
+    sequence.isSignedIn().then((signedIn: boolean) => {
+      if (!signedIn) {
+        router.navigate('/login')
       }
-    })()
+    })
   }, [])
 
   const handleGoogleLogin = async (tokenResponse: CredentialResponse) => {
