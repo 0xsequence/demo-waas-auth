@@ -14,7 +14,8 @@ import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
 import { NetworkSwitch } from './components/NetworkSwitch.tsx'
-import { accountToName, ListAccountsView } from './components/views/ListAccountsView.tsx'
+import { ListAccountsView } from './components/views/ListAccountsView.tsx'
+import { AccountName } from './components/views/AccountName.tsx'
 import { Account, IdentityType, Network } from '@0xsequence/waas'
 
 function App() {
@@ -115,7 +116,7 @@ function App() {
                   ? 'Guest account'
                   : `Logged in with account type ${currentAccount.type}`}{' '}
               </Text>
-              {currentAccount.type !== IdentityType.Guest && accountToName(currentAccount)}
+              {currentAccount.type !== IdentityType.Guest && <AccountName acc={currentAccount} />}
             </Box>
           )}
 
