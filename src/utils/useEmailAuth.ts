@@ -41,8 +41,8 @@ export function useEmailAuth({
         const res = await sequence.signIn({ email }, sessionName)
         onSuccess(res)
       }
-    } catch (e: any) {
-      setError(e.message || 'Unknown error')
+    } catch (e: unknown) {
+      setError(JSON.stringify(e))
     } finally {
       if (!linkAccount) {
         setLoading(false)

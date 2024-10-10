@@ -10,6 +10,9 @@ import { useEmailAuth } from '../../utils/useEmailAuth'
 import { randomName } from '../../utils/indexer'
 import { isAccountAlreadyLinkedError } from '../../utils/error'
 import { AccountName } from './AccountName'
+import { getMessageFromUnknownError } from '../../utils/getMessageFromUnknownError'
+import { PlayFabClient } from 'playfab-sdk'
+import { LoginRequest } from '../../LoginRequest'
 
 export function ListAccountsView() {
   const toast = useToast()
@@ -46,8 +49,8 @@ export function ListAccountsView() {
       await sequence.removeAccount(id)
       const response = await sequence.listAccounts()
       setAccounts(response.accounts)
-    } catch (e: any) {
-      setError(e.message)
+    } catch (e: unknown) {
+      setError(getMessageFromUnknownError(e))
       const response = await sequence.listAccounts()
       setAccounts(response.accounts)
     }
@@ -72,8 +75,7 @@ export function ListAccountsView() {
     }
   }
 
-  const appleRedirectUri =
-    'https://' + window.location.host
+  const appleRedirectUri = 'https://' + window.location.host
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const challenge = await sequence.initAuth({ idToken: response.authorization.id_token })
     try {
@@ -93,14 +95,18 @@ export function ListAccountsView() {
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      PlayFabClient.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
+          accessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
           CreateAccount: true,
-          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID
-        },
-        async (response?: { data: { SessionTicket: string } }, error?: Error) => {
-          if (response) {
+          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
+          titleId: import.meta.env.VITE_PLAYFAB_TITLE_ID
+        } as LoginRequest,
+        async (error, response) => {
+          if (error) {
+            console.error('Error: ' + JSON.stringify(error))
+          } else if (response.data.SessionTicket) {
             try {
               const challange = await sequence.initAuth({
                 playFabTitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID,
@@ -123,8 +129,6 @@ export function ListAccountsView() {
                 })
               }
             }
-          } else if (error) {
-            console.log('Error: ' + JSON.stringify(error))
           }
         }
       )
@@ -143,8 +147,8 @@ export function ListAccountsView() {
 
         setLoading(false)
       })
-      .catch(e => {
-        setError(e.message)
+      .catch((e: unknown) => {
+        setError(getMessageFromUnknownError(e))
         setLoading(false)
       })
   }, [emailAuthInProgress])
@@ -194,7 +198,7 @@ export function ListAccountsView() {
               redirectURI: appleRedirectUri,
               usePopup: true
             }}
-            onError={(error: any) => console.error(error)}
+            onError={(error: unknown) => console.error(error)}
             onSuccess={handleAppleLogin}
             uiType="dark"
           />
@@ -248,7 +252,7 @@ export function ListAccountsView() {
           <Box marginBottom="4">
             <Text variant="normal" color="text80">
               Enter your email to recieve a code to login and create your wallet. <br />
-              Please check your spam folder if you don't see it in your inbox.
+              Please check your spam folder if you don&apos;t see it in your inbox.
             </Text>
 
             <Box marginTop="6">

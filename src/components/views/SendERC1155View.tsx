@@ -1,15 +1,18 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { Box, Text, Button, TextInput, Spinner, Select } from '@0xsequence/design-system'
+import { Box, Text, Button, TextInput, Spinner } from '@0xsequence/design-system'
 import { ethers } from 'ethers'
 import { sequence } from '../../main'
 import { erc1155, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
 import { GetTokenBalancesReturn, SequenceIndexer } from '@0xsequence/indexer'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { checkTransactionFeeOptions } from './checkTransactionFeeOptions.tsx'
 import { findSupportedNetwork } from '@0xsequence/network'
+import { SendERC1155RowView } from './SendERC1155RowView.tsx'
+import { safeEventStringSetter } from '../../utils/safeEventStringSetter.ts'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 
-type SelectOption = {
+export type SelectOption = {
   className?: string
   disabled?: boolean
   label: string | ReactNode
@@ -19,61 +22,6 @@ type SelectOption = {
 interface TokenEntry {
   tokenId: string
   amount: string
-}
-
-export function SendERC1155RowView(props: {
-  index: number
-  options: GetTokenBalancesReturn | undefined
-  onChange: (index: number, tokenId: string, value: string) => void
-  removeTokenEntry: (index: number) => void
-}) {
-  const [selectedId, setSelectedId] = useState<string>('')
-  const [amount, setAmount] = useState<string>('')
-
-  useEffect(() => {
-    props.onChange(props.index, selectedId, amount)
-  }, [selectedId, amount])
-
-  const rowStyle: React.CSSProperties = {
-    display: 'flex',
-    gap: '10px',
-    marginBottom: '10px'
-  }
-
-  const fieldStyle: React.CSSProperties = {
-    flex: 1
-  }
-
-  return (
-    <Box style={rowStyle}>
-      <Box style={fieldStyle}>
-        <Select
-          name={`sendERC1155TokenId${props.index}`}
-          value={selectedId}
-          disabled={!props.options}
-          onValueChange={(value: string) => {
-            setSelectedId(value)
-          }}
-          options={
-            (props.options?.balances.map(balance => ({
-              label: `${balance.tokenMetadata?.name || 'Unknown'} - ${balance.balance}`,
-              value: balance.tokenID
-            })) || []) as SelectOption[]
-          }
-          placeholder="Select a token"
-        />
-      </Box>
-      <Box style={fieldStyle}>
-        <TextInput type="text" value={selectedId} onChange={(e: any) => setSelectedId(e.target.value)} placeholder="Token ID" />
-      </Box>
-      <Box style={fieldStyle}>
-        <TextInput type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} placeholder="Amount" />
-      </Box>
-      <Box style={fieldStyle}>
-        <Button label="Remove" onClick={() => props.removeTokenEntry(props.index)} />
-      </Box>
-    </Box>
-  )
 }
 
 export function SendERC1155View(props: { network?: Network }) {
@@ -215,7 +163,7 @@ export function SendERC1155View(props: { network?: Network }) {
         <TextInput
           type="text"
           value={tokenAddress}
-          onChange={(e: any) => setTokenAddress(e.target.value)}
+          onChange={safeEventStringSetter(setTokenAddress)}
           placeholder="Token Contract Address"
         />
       </Box>
@@ -239,7 +187,7 @@ export function SendERC1155View(props: { network?: Network }) {
         <TextInput
           type="text"
           value={destinationAddress}
-          onChange={(e: any) => setDestinationAddress(e.target.value)}
+          onChange={safeEventStringSetter(setDestinationAddress)}
           placeholder="Destination Address"
         />
       </Box>

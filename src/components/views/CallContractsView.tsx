@@ -2,7 +2,8 @@ import { Box, Text, Button, TextInput, Spinner } from '@0xsequence/design-system
 import { SetStateAction, useEffect, useState } from 'react'
 import { sequence } from '../../main'
 import { delayedEncode, FeeOption, isSentTransactionResponse, Network } from '@0xsequence/waas'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { checkTransactionFeeOptions } from './checkTransactionFeeOptions.tsx'
 import { findSupportedNetwork } from '@0xsequence/network'
 
 export function CallContractsView(props: { network?: Network }) {

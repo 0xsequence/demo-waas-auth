@@ -3,8 +3,10 @@ import { Box, Text, Button, TextInput, Spinner, Select } from '@0xsequence/desig
 import { ethers } from 'ethers'
 import { sequence } from '../../main'
 import { FeeOption, isSentTransactionResponse, Network, erc20 } from '@0xsequence/waas'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { checkTransactionFeeOptions } from './checkTransactionFeeOptions.tsx'
 import { findSupportedNetwork } from '@0xsequence/network'
+import { safeEventStringSetter } from '../../utils/safeEventStringSetter.ts'
 
 interface TokenOption {
   label: string
@@ -79,6 +81,7 @@ export function SendERC20View(props: { network?: Network }) {
       setDecimals(decimals)
       setTokenBalance(`${ethers.formatUnits(balance, decimals)} ${symbol}`)
     } catch (e) {
+      void e
       setTokenBalance('---')
     }
   }
@@ -153,7 +156,7 @@ export function SendERC20View(props: { network?: Network }) {
             type="text"
             value={customTokenAddress}
             disabled={!enabledCustomToken}
-            onChange={(e: any) => setCustomTokenAddress(e.target.value)}
+            onChange={safeEventStringSetter(setCustomTokenAddress)}
             placeholder="Custom ERC20 Contract Address"
           />
         </Box>
@@ -170,13 +173,13 @@ export function SendERC20View(props: { network?: Network }) {
         <TextInput
           type="text"
           value={destinationAddress}
-          onChange={(e: any) => setDestinationAddress(e.target.value)}
+          onChange={safeEventStringSetter(setDestinationAddress)}
           placeholder="Destination Address"
         />
       </Box>
 
       <Box marginTop="5">
-        <TextInput type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} placeholder="Amount" />
+        <TextInput type="text" value={amount} onChange={safeEventStringSetter(setAmount)} placeholder="Amount" />
       </Box>
 
       {error && (

@@ -14,6 +14,9 @@ import { useEmailAuth } from './utils/useEmailAuth.ts'
 import { StytchLogin } from './components/StytchLogin.tsx'
 import { StytchLegacyLogin } from './components/StytchLegacyLogin.tsx'
 import { EmailConflictInfo } from '@0xsequence/waas'
+import { PlayFabClient } from 'playfab-sdk'
+import { LoginRequest } from './LoginRequest.tsx'
+import { getMessageFromUnknownError } from './utils/getMessageFromUnknownError.ts'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -35,14 +38,15 @@ function Login() {
   const handleGooglePlayfabLogin = useGoogleLogin({
     flow: 'implicit',
     onSuccess: tokenResponse => {
-      (window as any).PlayFabClientSDK.LoginWithGoogleAccount(
+      PlayFabClient.LoginWithGoogleAccount(
         {
           AccessToken: tokenResponse.access_token, // This access token is generated after a user has signed into Google
-          CreateAccount: true,
-          TitleId: import.meta.env.VITE_PLAYFAB_TITLE_ID
-        },
-        async (response?: { data: { SessionTicket: string } }, error?: Error) => {
-          if (response) {
+          CreateAccount: true
+        } as LoginRequest,
+        async (error, response) => {
+          if (error) {
+            console.error('Error: ' + JSON.stringify(error))
+          } else if (response.data.SessionTicket) {
             try {
               const seqRes = await sequence.signIn(
                 {
@@ -54,10 +58,8 @@ function Login() {
               console.log('Sequence response:', seqRes)
               router.navigate('/')
             } catch (e) {
-              console.error('Error: ' + JSON.stringify(error))
+              console.error('Error: ' + getMessageFromUnknownError(e))
             }
-          } else if (error) {
-            console.error('Error: ' + JSON.stringify(error))
           }
         }
       )
@@ -99,8 +101,7 @@ function Login() {
     router.navigate('/')
   }
 
-  const appleRedirectUri =
-    'https://' + window.location.host
+  const appleRedirectUri = 'https://' + window.location.host
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const res = await sequence.signIn(
       {
@@ -174,7 +175,7 @@ function Login() {
           <Box marginTop="5" marginBottom="4">
             <Text variant="normal" color="text80">
               Enter your email to recieve a code to login and create your wallet. <br />
-              Please check your spam folder if you don't see it in your inbox.
+              Please check your spam folder if you don&apos;t see it in your inbox.
             </Text>
 
             <Box marginTop="6">
@@ -243,7 +244,7 @@ function Login() {
                       redirectURI: appleRedirectUri,
                       usePopup: true
                     }}
-                    onError={(error: any) => console.error(error)}
+                    onError={(error: unknown) => console.error(getMessageFromUnknownError(error))}
                     onSuccess={handleAppleLogin}
                     uiType="dark"
                   />
