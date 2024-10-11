@@ -8,7 +8,7 @@ import Login from './Login.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { SequenceWaaS } from '@0xsequence/waas'
 import App from './App.tsx'
-import { ethers } from 'ethers'
+import { JsonRpcProvider } from 'ethers'
 import './main.css'
 import { MaybeWithStytch } from './components/MaybeWithStytch.tsx'
 
@@ -19,7 +19,7 @@ const SEQUENCE_WAAS_CONFIG_KEY = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY
 const SEQUENCE_PROJECT_ACCESS_KEY_DEV = import.meta.env.VITE_SEQUENCE_PROJECT_ACCESS_KEY_DEV
 const SEQUENCE_WAAS_CONFIG_KEY_DEV = import.meta.env.VITE_SEQUENCE_WAAS_CONFIG_KEY_DEV
 
-export const node = new ethers.JsonRpcProvider('https://nodes.sequence.app/polygon')
+export const node = new JsonRpcProvider('https://nodes.sequence.app/polygon')
 
 const urlParams = new URLSearchParams(window.location.search)
 const targetEnv = urlParams.get('env') ?? 'prod'
@@ -40,7 +40,8 @@ if (targetEnv === 'dev') {
 export const sequence = new SequenceWaaS({
   network: 'polygon',
   projectAccessKey: projectAccessKey,
-  waasConfigKey: waasConfigKey
+  waasConfigKey: waasConfigKey,
+  disableHttpSignatureCheck: true,
 })
 
 export const router = createHashRouter([

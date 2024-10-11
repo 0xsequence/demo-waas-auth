@@ -1,8 +1,8 @@
-import { Box, Text, Button, TextInput, Spinner } from '@0xsequence/design-system'
-import { ethers } from 'ethers'
-import { SetStateAction, useEffect, useState } from 'react'
-import { sequence } from '../../main'
-import { isSentTransactionResponse, Network, FeeOption } from '@0xsequence/waas'
+import { Box, Text, Button, TextInput, Spinner } from "@0xsequence/design-system"
+import { formatEther, parseEther } from "ethers"
+import { SetStateAction, useEffect, useState } from "react"
+import { sequence } from "../../main"
+import { isSentTransactionResponse, Network, FeeOption } from "@0xsequence/waas"
 import { GetEtherBalanceArgs, SequenceIndexer } from '@0xsequence/indexer'
 import { findSupportedNetwork, indexerURL } from '@0xsequence/network'
 import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
@@ -66,15 +66,12 @@ export function SendTransactionsView(props: { network?: Network }) {
   }
 
   const checkFeeOptions = async (to: string, amount: string) => {
-    const resp = await checkTransactionFeeOptions({
-      transactions: [
-        {
-          to,
-          value: ethers.parseEther(amount)
-        }
-      ],
-      network: props.network
-    })
+      const resp = await checkTransactionFeeOptions({
+        transactions: [{
+          to, value: parseEther(amount),
+        }],
+        network: props.network
+      })
 
     if (resp.feeQuote && resp.feeOptions) {
       setFeeOptions(resp.feeOptions)
@@ -94,12 +91,9 @@ export function SendTransactionsView(props: { network?: Network }) {
 
       setIsNativeTokenSendTxInProgress(true)
       const tx = await sequence.sendTransaction({
-        transactions: [
-          {
-            to,
-            value: ethers.parseEther(amount)
-          }
-        ],
+        transactions: [{
+          to, value: parseEther(amount),
+        }],
         network: props.network?.id,
         transactionsFeeOption: feeOption,
         transactionsFeeQuote: feeQuote
@@ -126,7 +120,7 @@ export function SendTransactionsView(props: { network?: Network }) {
   return (
     <Box>
       <Text variant="normal" color="text100" fontWeight="bold">
-        Native token balance: {ethers.formatEther(nativeTokenBalance || 0)} {nativeTokenName}
+        Native token balance: {formatEther(nativeTokenBalance || 0)} {nativeTokenName}
       </Text>
       <Button marginLeft="2" size="xs" label="Fetch" onClick={fetchNativeTokenBalance} />
       <Box marginTop="5">
