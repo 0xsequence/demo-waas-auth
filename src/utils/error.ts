@@ -1,3 +1,6 @@
-export const isAccountAlreadyLinkedError = (e: any) => {
-  return e.name === 'AccountAlreadyLinked'
+export const isAccountAlreadyLinkedError = (e: unknown) => {
+  if (e && typeof e === 'object' && 'name' in e) {
+    return e.name === 'AccountAlreadyLinked'
+  }
+  return false
 }

@@ -40,7 +40,7 @@ const networks = {
   XAI: 660279,
   XAI_SEPOLIA: 37714555429,
   XR_SEPOLIA: 2730
-};
+}
 
 export const networkImages = {
   [networks.MAINNET]: 'https://assets.sequence.info/images/networks/small/1.webp',
@@ -82,4 +82,4 @@ export const networkImages = {
   [networks.ASTAR_ZKYOTO]: 'https://assets.sequence.info/images/networks/small/6038361.webp',
   [networks.B3_SEPOLIA]: 'https://assets.sequence.info/images/networks/small/1993.webp',
   [networks.XR_SEPOLIA]: 'https://assets.sequence.info/images/networks/small/2730.webp'
-};
+}

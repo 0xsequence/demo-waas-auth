@@ -1,20 +1,20 @@
-import {useStytch, useStytchSession} from "@stytch/react";
-import {SetStateAction, useEffect, useRef, useState} from "react";
-import {router, sequence} from "../main.tsx";
-import {randomName} from "../utils/indexer.ts";
-import {SessionDurationOptions} from "@stytch/vanilla-js";
-import {Box, Button, Text, TextInput} from "@0xsequence/design-system";
+import { useStytch, useStytchSession } from '@stytch/react'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
+import { router, sequence } from '../main.tsx'
+import { randomName } from '../utils/indexer.ts'
+import { SessionDurationOptions } from '@stytch/vanilla-js'
+import { Box, Button, Text, TextInput } from '@0xsequence/design-system'
 
 enum StytchLoginState {
   NONE,
   AUTH_INITIATED,
   GOT_MAGIC_LINK,
-  SEQUENCE_SIGN_IN,
+  SEQUENCE_SIGN_IN
 }
 
 export function StytchLogin() {
   const stytchClient = useStytch()
-  const { session: stytchSession } = useStytchSession();
+  const { session: stytchSession } = useStytchSession()
   const [state, setState] = useState(StytchLoginState.NONE)
 
   const [stytchEmail, setStytchEmail] = useState('')
@@ -30,11 +30,11 @@ export function StytchLogin() {
       setState(StytchLoginState.GOT_MAGIC_LINK)
       ;(async () => {
         await stytchClient.magicLinks.authenticate(params.get('token') || '', {
-          session_duration_minutes: 5,
+          session_duration_minutes: 5
         } as SessionDurationOptions)
       })()
     }
-  }, [stytchClient, stytchSession, state]);
+  }, [stytchClient, stytchSession, state])
 
   useEffect(() => {
     if (localStorage.getItem('stytch_auth') !== 'native') {
@@ -45,9 +45,12 @@ export function StytchLogin() {
       setState(StytchLoginState.SEQUENCE_SIGN_IN)
       ;(async () => {
         const tokens = stytchClient.session.getTokens()!
-        const walletAddress = await sequence.signIn({
-          idToken: tokens.session_jwt,
-        }, randomName())
+        const walletAddress = await sequence.signIn(
+          {
+            idToken: tokens.session_jwt
+          },
+          randomName()
+        )
 
         console.log(`Wallet address: ${walletAddress}`)
 
@@ -59,7 +62,7 @@ export function StytchLogin() {
         router.navigate('/')
       })()
     }
-  }, [stytchSession, stytchClient, state]);
+  }, [stytchSession, stytchClient, state])
 
   const initiateStytchEmailAuth = async (email: string) => {
     localStorage.setItem('stytch_auth', 'native')
@@ -96,22 +99,22 @@ export function StytchLogin() {
           />
         </Box>
         <Box gap="2" marginY="4" alignItems="center" justifyContent="center">
-            <Button
-              variant="primary"
-              label="Continue"
-              onClick={() => initiateStytchEmailAuth(stytchEmail)}
-              data-id="continueButton"
-              disabled={state !== StytchLoginState.NONE}
-            />
+          <Button
+            variant="primary"
+            label="Continue"
+            onClick={() => initiateStytchEmailAuth(stytchEmail)}
+            data-id="continueButton"
+            disabled={state !== StytchLoginState.NONE}
+          />
         </Box>
         {state === StytchLoginState.AUTH_INITIATED && (
           <Box>
-            <Text variant="normal" color="text80">Magic link sent to your email. Please click the link. You can close this page.</Text>
+            <Text variant="normal" color="text80">
+              Magic link sent to your email. Please click the link. You can close this page.
+            </Text>
           </Box>
         )}
       </Box>
     </Box>
   )
-
-
 }

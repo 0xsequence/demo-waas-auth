@@ -14,8 +14,13 @@ import { PINCodeInput } from './components/PINCodeInput'
 import { SendERC20View } from './components/views/SendERC20View'
 import { SendERC1155View } from './components/views/SendERC1155View'
 import { NetworkSwitch } from './components/NetworkSwitch.tsx'
-import { accountToName, ListAccountsView } from './components/views/ListAccountsView.tsx'
+import { ListAccountsView } from './components/views/ListAccountsView.tsx'
+import { AccountName } from './components/views/AccountName.tsx'
 import { Account, IdentityType, Network } from '@0xsequence/waas'
+import { getMessageFromUnknownError } from './utils/getMessageFromUnknownError.ts'
+import { PlayFabClient } from 'playfab-sdk'
+
+PlayFabClient.settings.titleId = import.meta.env.VITE_PLAYFAB_TITLE_ID
 
 function App() {
   const [walletAddress, setWalletAddress] = useState<string>()
@@ -35,8 +40,8 @@ function App() {
       .then((address: string) => {
         setWalletAddress(address)
       })
-      .catch((e: Error) => {
-        setFetchWalletAddressError(e.message)
+      .catch((e: unknown) => {
+        setFetchWalletAddressError(getMessageFromUnknownError(e))
       })
 
     sequence.listAccounts().then(response => {
@@ -74,7 +79,7 @@ function App() {
       })
     })
     return () => {
-      removeCallback.then((cb: any) => cb())
+      removeCallback.then((cb: () => void) => cb())
     }
   }, [])
 
@@ -115,7 +120,7 @@ function App() {
                   ? 'Guest account'
                   : `Logged in with account type ${currentAccount.type}`}{' '}
               </Text>
-              {currentAccount.type !== IdentityType.Guest && accountToName(currentAccount)}
+              {currentAccount.type !== IdentityType.Guest && <AccountName acc={currentAccount} />}
             </Box>
           )}
 
@@ -126,8 +131,8 @@ function App() {
             onClick={async () => {
               try {
                 await sequence.dropSession({ strict: false })
-              } catch (e: any) {
-                console.warn(`Could not drop session: ${e.message}`)
+              } catch (e: unknown) {
+                console.warn(`Could not drop session: ${getMessageFromUnknownError(e)}`)
               }
 
               googleLogout()

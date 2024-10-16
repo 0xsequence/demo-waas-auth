@@ -5,7 +5,8 @@ import { sequence } from '../../main'
 import { isSentTransactionResponse, Network, FeeOption } from '@0xsequence/waas'
 import { GetEtherBalanceArgs, SequenceIndexer } from '@0xsequence/indexer'
 import { findSupportedNetwork, indexerURL } from '@0xsequence/network'
-import { checkTransactionFeeOptions, TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { TransactionFeeOptions } from './TransactionFeeOptions.tsx'
+import { checkTransactionFeeOptions } from './checkTransactionFeeOptions.tsx'
 
 const INDEXER_API_KEY = import.meta.env.VITE_SEQUENCE_INDEXER_API_KEY
 

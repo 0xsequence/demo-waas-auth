@@ -2,10 +2,12 @@ import { Box, Text, Spinner } from '@0xsequence/design-system'
 import { useEffect, useState } from 'react'
 import { sequence } from '../../main'
 import { Sessions } from '@0xsequence/waas'
+import { getMessageFromUnknownError } from '../../utils/getMessageFromUnknownError'
 
 export function ListSessionsView() {
   const [sessions, setSessions] = useState<Sessions>()
-  const [_, setThisSession] = useState<string>()
+  const [thisSession, setThisSession] = useState<string>()
+  void thisSession
   const [loading, setLoading] = useState<boolean>(true)
 
   const [getSessionsError, setGetSessionsError] = useState<string>()
@@ -16,8 +18,8 @@ export function ListSessionsView() {
     try {
       await sequence.dropSession({ sessionId: id })
       setSessions(await sequence.listSessions())
-    } catch (e: any) {
-      setGetSessionsError(e.message)
+    } catch (e: unknown) {
+      setGetSessionsError(getMessageFromUnknownError(e))
       setSessions(await sequence.listSessions())
     }
 
@@ -31,8 +33,8 @@ export function ListSessionsView() {
         setThisSession(t)
         setLoading(false)
       })
-      .catch(e => {
-        setGetSessionsError(e.message)
+      .catch((e: unknown) => {
+        setGetSessionsError(getMessageFromUnknownError(e))
         setLoading(false)
       })
   }, [])

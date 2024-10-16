@@ -1,9 +1,9 @@
-import { Box, Text, Button, TextInput } from "@0xsequence/design-system"
-import { Network } from "@0xsequence/waas";
-import { SetStateAction, useState } from "react"
-import { sequence } from "../../main"
+import { Box, Text, Button, TextInput } from '@0xsequence/design-system'
+import { Network } from '@0xsequence/waas'
+import { SetStateAction, useState } from 'react'
+import { sequence } from '../../main'
 
-export function SignMessageView(props: {network?: Network}) {
+export function SignMessageView(props: { network?: Network }) {
   const [messageToSign, setMessageToSign] = useState<string>('')
   const [signature, setSignature] = useState<string>()
 
@@ -32,12 +32,7 @@ export function SignMessageView(props: {network?: Network}) {
         required
         data-id="signMessageInput"
       />
-      <Button
-        marginTop="5"
-        label="Sign message"
-        disabled={messageToSign === ''}
-        onClick={() => signMessage()}
-      />
+      <Button marginTop="5" label="Sign message" disabled={messageToSign === ''} onClick={() => signMessage()} />
       {signature && signature !== '' && (
         <Box flexDirection="column" marginTop="5">
           <Text variant="normal" color="text100" fontWeight="bold">

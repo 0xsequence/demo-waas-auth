@@ -16,7 +16,7 @@ export const Logo = () => {
         Demo App
       </Text>
       <Text variant="normal" marginLeft="auto" color="polygonLight">
-        Showcasing WaaS
+        Showcasing Embedded Wallets
       </Text>
     </Box>
   )
