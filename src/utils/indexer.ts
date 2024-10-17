@@ -26,7 +26,9 @@ export const getNativeTokenBalance = async ({ accountAddress, chainId }: GetToke
       contractType: ContractType.UNKNOWN,
       blockHash: '',
       blockNumber: 0,
-      tokenID: ''
+      tokenID: '',
+      uniqueCollectibles: '',
+      isSummary: false
     }
     return [tokenBalance]
   } catch (e) {
